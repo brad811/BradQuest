@@ -4,10 +4,11 @@ import items.Item;
 
 import org.lwjgl.opengl.GL11;
 
+import render.Renderer;
+
 import client.Client;
 
 import main.Map;
-import main.Renderer;
 
 public class Tile
 {

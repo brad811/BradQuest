@@ -165,8 +165,6 @@ public class GameApplet extends Applet
 		GL11.glDepthFunc(GL11.GL_LEQUAL); // The Type Of Depth Test To Do
 		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST); // Really Nice Perspective Calculations
 		
-		
-		
 		float lightLevel = 0.8f;
 		FloatBuffer lightAmbient = BufferUtils.createFloatBuffer(4).put(new float[] { lightLevel, lightLevel, lightLevel, 1.0f });
 		FloatBuffer lightDiffuse = BufferUtils.createFloatBuffer(4).put(new float[] { 1.0f, 1.0f, 1.0f, 1.0f });

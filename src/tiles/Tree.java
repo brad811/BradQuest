@@ -2,10 +2,11 @@ package tiles;
 
 import org.lwjgl.opengl.GL11;
 
+import render.Renderer;
+
 import items.ItemEntity;
 import items.LogEntity;
 import main.Map;
-import main.Renderer;
 
 public class Tree extends SolidTile
 {
