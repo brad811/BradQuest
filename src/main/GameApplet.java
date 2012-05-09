@@ -93,6 +93,7 @@ public class GameApplet extends Applet
 		while(running)
 		{
 			render();
+			//GL11.glPopMatrix();
 			Display.sync(Game.FPS);
 			Display.update();
 		}
@@ -154,6 +155,8 @@ public class GameApplet extends Applet
 		GL11.glMatrixMode(GL11.GL_PROJECTION); // Select The Projection Matrix
 		GL11.glLoadIdentity(); // Reset The Projection Matrix
 		
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		
 		GL11.glMatrixMode(GL11.GL_MODELVIEW); // Select The Modelview Matrix
 		GL11.glLoadIdentity(); // Reset The Modelview Matrix
 		
@@ -164,6 +167,11 @@ public class GameApplet extends Applet
 		GL11.glEnable(GL11.GL_DEPTH_TEST); // Enables Depth Testing
 		GL11.glDepthFunc(GL11.GL_LEQUAL); // The Type Of Depth Test To Do
 		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST); // Really Nice Perspective Calculations
+		
+		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
+		GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
+		GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 		
 		float lightLevel = 0.8f;
 		FloatBuffer lightAmbient = BufferUtils.createFloatBuffer(4).put(new float[] { lightLevel, lightLevel, lightLevel, 1.0f });

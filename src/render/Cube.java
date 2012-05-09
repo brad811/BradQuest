@@ -2,8 +2,6 @@ package render;
 
 public class Cube extends Shape
 {
-	float[] vertex_data_array;
-	
 	public void initVBO()
 	{
 		float[] vertex_data_array = {

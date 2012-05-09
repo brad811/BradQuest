@@ -1,9 +1,12 @@
 package tiles;
 
+import java.util.HashMap;
+
 import items.Item;
 
 import org.lwjgl.opengl.GL11;
 
+import render.Plane;
 import render.Renderer;
 
 import client.Client;
@@ -33,6 +36,8 @@ public class Tile
 	public final static int TILE_TREE = 5;
 	public final static int TILE_ASH = 6;
 	
+	public static HashMap<Integer, Plane> planes = new HashMap<Integer, Plane>();
+	
 	public Tile(Map map, int x, int y)
 	{
 		this.map = map;
@@ -42,12 +47,12 @@ public class Tile
 	
 	public static void init()
 	{
-		Renderer.buildTile(TILE_ASH, Ash._tileX, Ash._tileY);
-		Renderer.buildTile(TILE_DIRT, Dirt._tileX, Dirt._tileY);
-		Renderer.buildTile(TILE_GRASS, Grass._tileX, Grass._tileY);
-		Renderer.buildTile(TILE_LAVA, Lava._tileX, Lava._tileY);
-		Renderer.buildTile(TILE_TREE, Tree._tileX, Tree._tileY);
-		Renderer.buildTile(TILE_WATER, Water._tileX, Water._tileY);
+		planes.put(TILE_ASH, Renderer.buildTile(TILE_ASH, Ash._tileX, Ash._tileY));
+		planes.put(TILE_DIRT, Renderer.buildTile(TILE_DIRT, Dirt._tileX, Dirt._tileY));
+		planes.put(TILE_GRASS, Renderer.buildTile(TILE_GRASS, Grass._tileX, Grass._tileY));
+		planes.put(TILE_LAVA, Renderer.buildTile(TILE_LAVA, Lava._tileX, Lava._tileY));
+		planes.put(TILE_TREE, Renderer.buildTile(TILE_TREE, Tree._tileX, Tree._tileY));
+		planes.put(TILE_WATER, Renderer.buildTile(TILE_WATER, Water._tileX, Water._tileY));
 		
 		Renderer.buildTree();
 	}
@@ -90,7 +95,7 @@ public class Tile
 		GL11.glLoadIdentity(); // Reset The View
 		GL11.glTranslatef(screenX, screenY, -1.0f); // Move down into position
 		
-		GL11.glCallList(Renderer.tiles[id]);
+		planes.get(id).render(0.5f, 0.5f, 0.5f);
 	}
 	
 	public void tick()
