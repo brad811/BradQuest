@@ -181,7 +181,7 @@ public class Server
 			Player player = players.get(name);
 			send(thread, "player|"+player.name+"|"+player.getX()+"|"+player.getY()+"|"+player.direction+"");
 			
-			say("Client connected: "+name+" (" + clients.size() + " clients connected)\n");
+			say("Client connected: "+name+" (" + clients.size() + " clients connected)");
 			
 			sendMap(thread);
 			sendInventory(thread, player);

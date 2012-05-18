@@ -1,8 +1,6 @@
 package tiles;
 
-import org.lwjgl.opengl.GL11;
-
-import render.Renderer;
+import static org.lwjgl.opengl.GL11.*;
 
 import items.ItemEntity;
 import items.LogEntity;
@@ -32,13 +30,19 @@ public class Tree extends SolidTile
 		drops.put(50,drop);
 	}
 	
+	// Eventually this should go away, and just add a model to be rendered in the constructor, in SolidTile
 	public void render(float screenX, float screenY)
 	{
 		bottom.render(screenX, screenY);
 		
-		GL11.glLoadIdentity(); // Reset The View
-		GL11.glTranslatef(screenX, screenY, -1.0f); // Move down into position
+		glLoadIdentity(); // Reset The View
+		glTranslatef(screenX, screenY, 0.0f); // Move down into position
 		
-		GL11.glCallList(Renderer.tree);
+		// Trunk
+		Tile.models.get(Tile.TILE_TREE).get(0).render(0.5f, 0.5f, 1.0f);
+		
+		// Leaves
+		glTranslatef(0.0f, 0.0f, 1.0f);
+		Tile.models.get(Tile.TILE_TREE).get(1).render(1.5f, 1.5f, 0.5f);
 	}
 }

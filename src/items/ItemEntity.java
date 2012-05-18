@@ -1,6 +1,6 @@
 package items;
 
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 
 import main.Game;
 import main.GameApplet;
@@ -88,33 +88,32 @@ public class ItemEntity
 	
 	public void render(int playerX, int playerY)
 	{
-		GL11.glLoadIdentity(); // Reset The View
-		GL11.glTranslatef(
+		glLoadIdentity(); // Reset The View
+		
+		glTranslatef(
 				(float)(x / Game.tileSize) - ((float)(playerX % Game.tileSize) / (float)Game.tileSize),
 				(float)(y / Game.tileSize) - ((float)(playerY % Game.tileSize) / (float)Game.tileSize),
 				0.0f
 			); // Move down into position
 		
-		GL11.glRotatef(-45.0f, 1.0f, 0.0f, 0.0f); // Tilt 45 degrees back
+		glRotatef(-45.0f, 1.0f, 0.0f, 0.0f); // Tilt 45 degrees back
 		
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, GameApplet.getItemsTexture().getTextureID());
-		
-		//GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBindTexture(GL_TEXTURE_2D, GameApplet.getItemsTexture().getTextureID());
 		
 		float blah = 16.0f;
 		
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(0,0);
-		GL11.glVertex3f(-half,0,-half);
-		GL11.glTexCoord2f(1f/blah,0);
-		GL11.glVertex3f(half,0,-half);
-		GL11.glTexCoord2f(1f/blah,1f/blah);
-		GL11.glVertex3f(half,0,half);
-		GL11.glTexCoord2f(0,1f/blah);
-		GL11.glVertex3f(-half,0,half);
-		GL11.glEnd();
+		glBegin(GL_QUADS);
+		glTexCoord2f(0,0);
+		glVertex3f(-half,0,-half);
+		glTexCoord2f(1f/blah,0);
+		glVertex3f(half,0,-half);
+		glTexCoord2f(1f/blah,1f/blah);
+		glVertex3f(half,0,half);
+		glTexCoord2f(0,1f/blah);
+		glVertex3f(-half,0,half);
+		glEnd();
 		
 		//Cylinder log = new Cylinder();
 		//log.draw(size/4,size/4,size,8,8);

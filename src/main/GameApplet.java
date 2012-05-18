@@ -6,15 +6,15 @@ import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.nio.FloatBuffer;
+import java.util.Date;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.opengl.Texture;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 import client.Client;
 
@@ -90,10 +90,28 @@ public class GameApplet extends Applet
 		MultiplayerMode.init();
 		game.getPlayer().init();
 		
+		
+		int framerate_count = 0;
+		long framerate_timestamp = new Date().getTime();
+		
+		
 		while(running)
 		{
+			framerate_count++;
+
+			Date d = new Date();
+			long this_framerate_timestamp = d.getTime();
+			
+			if ((this_framerate_timestamp - framerate_timestamp) >= 1000)
+			{
+				System.err.println("Frame Rate: " + framerate_count);
+
+				framerate_count = 0;
+				framerate_timestamp = this_framerate_timestamp;
+			}
+			
 			render();
-			//GL11.glPopMatrix();
+			//glPopMatrix();
 			Display.sync(Game.FPS);
 			Display.update();
 		}
@@ -151,28 +169,24 @@ public class GameApplet extends Applet
 		int width = Display.getDisplayMode().getWidth();
 		int height = Display.getDisplayMode().getHeight();
 		
-		GL11.glViewport(0, 0, width, height); // Reset The Current Viewport
-		GL11.glMatrixMode(GL11.GL_PROJECTION); // Select The Projection Matrix
-		GL11.glLoadIdentity(); // Reset The Projection Matrix
+		glViewport(0, 0, width, height); // Reset The Current Viewport
+		glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
+		glLoadIdentity(); // Reset The Projection Matrix
 		
-		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		
-		GL11.glMatrixMode(GL11.GL_MODELVIEW); // Select The Modelview Matrix
-		GL11.glLoadIdentity(); // Reset The Modelview Matrix
+		glMatrixMode(GL_MODELVIEW); // Select The Modelview Matrix
+		glLoadIdentity(); // Reset The Modelview Matrix
 		
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glShadeModel(GL11.GL_SMOOTH); // Enables Smooth Shading
-		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Black Background
-		GL11.glClearDepth(1.0f); // Depth Buffer Setup
-		GL11.glEnable(GL11.GL_DEPTH_TEST); // Enables Depth Testing
-		GL11.glDepthFunc(GL11.GL_LEQUAL); // The Type Of Depth Test To Do
-		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST); // Really Nice Perspective Calculations
+		glEnable(GL_TEXTURE_2D);
+		glShadeModel(GL_SMOOTH); // Enables Smooth Shading
+		glClearColor(1.0f, 0.0f, 0.0f, 0.0f); // Black Background
+		glClearDepth(1.0f); // Depth Buffer Setup
+		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
+		glDepthFunc(GL_LEQUAL); // The Type Of Depth Test To Do
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice Perspective Calculations
 		
-		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
-		GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-		GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-		
+		/*
 		float lightLevel = 0.8f;
 		FloatBuffer lightAmbient = BufferUtils.createFloatBuffer(4).put(new float[] { lightLevel, lightLevel, lightLevel, 1.0f });
 		FloatBuffer lightDiffuse = BufferUtils.createFloatBuffer(4).put(new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
@@ -182,14 +196,15 @@ public class GameApplet extends Applet
 		lightDiffuse.flip();
 		lightPosition.flip();
 		
-	    GL11.glLight(GL11.GL_LIGHT1, GL11.GL_AMBIENT, lightAmbient); // Setup The Ambient Light
-	    GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, lightDiffuse); // Setup The Diffuse Light
-	    GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION, lightPosition); // Position The Light
-	    GL11.glEnable(GL11.GL_LIGHT1); // Enable Light One
+	    glLight(GL_LIGHT1, GL_AMBIENT, lightAmbient); // Setup The Ambient Light
+	    glLight(GL_LIGHT1, GL_DIFFUSE, lightDiffuse); // Setup The Diffuse Light
+	    glLight(GL_LIGHT1, GL_POSITION, lightPosition); // Position The Light
+	    glEnable(GL_LIGHT1); // Enable Light One
 	    
-	    GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-	    GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_AMBIENT_AND_DIFFUSE);
-	    GL11.glEnable(GL11.GL_LIGHTING);
+	    glEnable(GL_COLOR_MATERIAL);
+	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	    glEnable(GL_LIGHTING);
+	    */
 	}
 	
 	public static Texture getItemsTexture()
@@ -205,7 +220,7 @@ public class GameApplet extends Applet
 	public void render()
 	{
 		updateCamera();
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
 		
 		if(!Client.loaded)
 		{
@@ -221,14 +236,14 @@ public class GameApplet extends Applet
 	
 	public void updateCamera()
 	{
-		GL11.glMatrixMode(GL11.GL_PROJECTION); // Select The Projection Matrix
-		GL11.glLoadIdentity(); // Reset The Projection Matrix
-		GLU.gluPerspective(45.0f, ((float) 640 / (float) 480), 0.1f, 100.0f); // Calculate The Aspect Ratio Of The Window
+		glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
+		glLoadIdentity(); // Reset The Projection Matrix
+		gluPerspective(45.0f, ((float) 640 / (float) 480), 0.1f, 100.0f); // Calculate The Aspect Ratio Of The Window
 		
 		float cameraHeight = 17.0f;
 		float cameraTilt = -10.0f;
 		
-		GLU.gluLookAt(
+		gluLookAt(
 				// Be over the player
 				(game.getPlayer().getX() / Game.tileSize) - 0.5f, (game.getPlayer().getY() / Game.tileSize) + cameraTilt, cameraHeight,	// Eyes
 				
@@ -238,8 +253,8 @@ public class GameApplet extends Applet
 				0.0f, 0.0f, 1.0f	// Up
 			);
 		
-		GL11.glMatrixMode(GL11.GL_MODELVIEW); // Select The Modelview Matrix
-		GL11.glLoadIdentity(); // Reset The Modelview Matrix
+		glMatrixMode(GL_MODELVIEW); // Select The Modelview Matrix
+		glLoadIdentity(); // Reset The Modelview Matrix
 	}
 	
 	public void destroy()

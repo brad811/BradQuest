@@ -1,5 +1,8 @@
 package main;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glColor3f;
 import items.Item;
 import items.ItemEntity;
 
@@ -160,6 +163,9 @@ public class Map
 	
 	public void render(int screenX, int screenY, int playerX, int playerY)
 	{
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glBindTexture(GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
+		
 		int width = 32, height = 30;
 		for (int i = (playerX / Game.tileSize) - width/2;
 				i <= (playerX / Game.tileSize) + width/2;

@@ -3,13 +3,16 @@ package main;
 import items.Item;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
+
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 import render.Renderer;
+import render.Shape;
 import tiles.Tile;
 
 public class Player
@@ -35,6 +38,8 @@ public class Player
 	boolean canStrike = true;
 	
 	public PlayerInventory playerInventory;
+	
+	ArrayList<Shape> model;
 	
 	public Player(Input input, Map map, String name)
 	{
@@ -62,7 +67,7 @@ public class Player
 			System.out.println("Unable to load player texture!");
 		}
 		
-		Renderer.buildPlayer();
+		model = Renderer.buildPlayer();
 	}
 	
 	public Player(Map map, int x, int y)
@@ -125,7 +130,7 @@ public class Player
 		else
 			moving = false;
 		
-		counter = (counter + 1) % 60;
+		counter = (counter + 1) % Game.FPS;
 		
 		if (striking)
 		{
@@ -145,7 +150,7 @@ public class Player
 		else
 			moving = false;
 		
-		counter = (counter + 1) % 60;
+		counter = (counter + 1) % Game.FPS;
 	}
 	
 	public void tick()
@@ -250,10 +255,13 @@ public class Player
 		
 		//Strike.render(playerTexture, screenX, screenY, direction);
 		
-		GL11.glLoadIdentity(); // Reset The View
-		GL11.glTranslatef(x/Game.tileSize - 0.5f, y/Game.tileSize - 0.5f, -size * 0.6f); // Move down into position
+		glLoadIdentity(); // Reset The View
+		glTranslatef(x/Game.tileSize - 0.5f, y/Game.tileSize - 0.5f, -size * 0.6f); // Move down into position
 		
-		GL11.glCallList(Renderer.player);
+		model.get(1).render();
+		
+		glTranslatef(0.0f, 0.0f, 1.0f);
+		model.get(0).render();
 	}
 	
 	public void renderOther(int playerX, int playerY)
@@ -275,10 +283,13 @@ public class Player
 		
 		System.out.println("Other: ("+playerX+","+playerY+")");
 		
-		GL11.glLoadIdentity(); // Reset The View
-		GL11.glTranslatef(playerX/Game.tileSize - 0.5f, playerY/Game.tileSize - 0.5f, -size * 0.6f); // Move down into position
+		glLoadIdentity(); // Reset The View
+		glTranslatef(playerX/Game.tileSize - 0.5f, playerY/Game.tileSize - 0.5f, -size * 0.6f); // Move down into position
 		
-		GL11.glCallList(Renderer.player);
+		model.get(0).render();
+		
+		glTranslatef(0.0f, 0.0f, 1.0f);
+		model.get(1).render();
 	}
 	
 	public int getX()

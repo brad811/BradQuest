@@ -1,20 +1,16 @@
 package render;
 
-import main.GameApplet;
+import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
+import main.GameApplet;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public class Renderer
 {
-	public static int
-		tree,
-		player;
-	
 	public static Plane buildTile(int id, int tileX, int tileY)
 	{
-		glBindTexture(GL11.GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
+		glBindTexture(GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
 		
 		Plane plane = new Plane();
 		plane.init(tileX, tileY);
@@ -22,43 +18,45 @@ public class Renderer
 		return plane;
 	}
 	
-	public static void buildTree()
+	public static ArrayList<Shape> buildTree()
 	{
-		tree = glGenLists(1); // Generate 2 Different Lists
-		glNewList(tree,GL11.GL_COMPILE); // Start With The Box List
-		
-		glBindTexture(GL11.GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
+		ArrayList<Shape> tree = new ArrayList<Shape>();
+		glBindTexture(GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
 		
 		// Trunk
 		int tileX = 4, tileY = 0;
-		glTranslatef(0.0f, 0.0f, 0.5f);
-		//drawTexturedBox(tileX, tileY, 1.0f, 0.5f, 0.5f, 1.0f);
+		Cube trunk = new Cube();
+		trunk.init(tileX, tileY);
+		tree.add(trunk);
 		
 		// Leaves
 		tileX = 6;
 		tileY = 0;
-		glTranslatef(0.0f, 1.0f, 0.0f);
-		//glRotatef(180, 0.0f, 0.0f, 1.0f);
-		//drawTexturedBox(tileX, tileY, 0.8f, 1.0f, 1.0f, 1.0f);
+		Cube leaves = new Cube();
+		leaves.init(tileX, tileY);
+		tree.add(leaves);
 		
-		glEndList();
+		return tree;
 	}
 	
-	public static void buildPlayer()
+	public static ArrayList<Shape> buildPlayer()
 	{
-		player = glGenLists(1); // Generate 2 Different Lists
-		glNewList(player,GL11.GL_COMPILE); // Start With The Box List
+		ArrayList<Shape> tree = new ArrayList<Shape>();
+		glBindTexture(GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
 		
-		glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		// Head
+		int tileX = 3, tileY = 0;
+		Cube head = new Cube(0.5f);
+		head.init(tileX, tileY);
+		tree.add(head);
 		
-		glBegin(GL11.GL_QUADS);
+		// Torso
+		tileX = 1;
+		tileY = 0;
+		Cube torso = new Cube(0.5f);
+		torso.init(tileX, tileY);
+		tree.add(torso);
 		
-		glColor3f(1.0f,0.8f,0.6f); // peach?
-		glTranslatef(0.0f, 0.0f, 0.5f);
-		//Renderer.drawBox(0.5f, 1.0f, 1.0f, 1.0f);
-		
-		glEnd();
-		
-		glEndList();
+		return tree;
 	}
 }

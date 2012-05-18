@@ -1,13 +1,15 @@
 package tiles;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import items.Item;
 
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 
 import render.Plane;
 import render.Renderer;
+import render.Shape;
 
 import client.Client;
 
@@ -37,6 +39,7 @@ public class Tile
 	public final static int TILE_ASH = 6;
 	
 	public static HashMap<Integer, Plane> planes = new HashMap<Integer, Plane>();
+	public static HashMap<Integer, ArrayList<Shape>> models = new HashMap<Integer, ArrayList<Shape>>();
 	
 	public Tile(Map map, int x, int y)
 	{
@@ -54,7 +57,7 @@ public class Tile
 		planes.put(TILE_TREE, Renderer.buildTile(TILE_TREE, Tree._tileX, Tree._tileY));
 		planes.put(TILE_WATER, Renderer.buildTile(TILE_WATER, Water._tileX, Water._tileY));
 		
-		Renderer.buildTree();
+		models.put(TILE_TREE, Renderer.buildTree());
 	}
 	
 	public void strike(Item item)
@@ -92,10 +95,10 @@ public class Tile
 	
 	public void render(float screenX, float screenY)
 	{
-		GL11.glLoadIdentity(); // Reset The View
-		GL11.glTranslatef(screenX, screenY, -1.0f); // Move down into position
+		glLoadIdentity(); // Reset The View
+		glTranslatef(screenX, screenY, -1.0f); // Move down into position
 		
-		planes.get(id).render(0.5f, 0.5f, 0.5f);
+		planes.get(id).render();
 	}
 	
 	public void tick()

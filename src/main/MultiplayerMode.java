@@ -6,10 +6,11 @@ import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
+
+import static org.lwjgl.opengl.GL11.*;
 
 import tiles.Tile;
 
@@ -77,9 +78,9 @@ public class MultiplayerMode extends Mode implements Runnable
 			if(tilesTexture == null)
 				tilesTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("/tiles.png"));
 			
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, tilesTexture.getTextureID());
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+			glBindTexture(GL_TEXTURE_2D, tilesTexture.getTextureID());
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		} catch (IOException e)
 		{
 			System.out.println("Unable to load tiles texture!");
@@ -90,9 +91,9 @@ public class MultiplayerMode extends Mode implements Runnable
 			if(itemsTexture == null)
 				itemsTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("/items.png"));
 			
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, itemsTexture.getTextureID());
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+			glBindTexture(GL_TEXTURE_2D, itemsTexture.getTextureID());
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		} catch (IOException e)
 		{
 			System.out.println("Unable to load items texture!");
@@ -198,8 +199,6 @@ public class MultiplayerMode extends Mode implements Runnable
 	{
 		game.map.render(width, height, getPlayer().getX(), getPlayer().getY());
 		
-		game.map.renderItemEntities(game.getPlayer().getX(), game.getPlayer().getY());
-		
 		try
 		{
 			Player p;
@@ -215,6 +214,9 @@ public class MultiplayerMode extends Mode implements Runnable
 		}
 		
 		getPlayer().render();
+		
+		// Move this to last when it's not immediate anymore
+		game.map.renderItemEntities(game.getPlayer().getX(), game.getPlayer().getY());
 		
 		lastTime = curTime;
 		curTime = System.currentTimeMillis();

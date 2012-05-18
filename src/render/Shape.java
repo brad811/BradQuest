@@ -3,11 +3,10 @@ package render;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import main.GameApplet;
-
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
 
 public class Shape
 {
@@ -18,29 +17,50 @@ public class Shape
 	int vertex_buffer_id;
 	FloatBuffer vertex_buffer_data;
 	
+	float size = 1.01f;
+	float half = size/2;
+	
+	float scale = 1.0f;
+	
+	public Shape()
+	{
+		
+	}
+	
+	public Shape(float scale)
+	{
+		this.scale = scale;
+	}
+	
 	public void init(int offX, int offY)
 	{
 		offsetX = offX;
 		offsetY = offY;
 		
-		up = (offsetY + 1.0f) / 16.001f;
-		down = (offsetY) / 16.001f;
-		left = (offsetX) / 16.001f;
-		right = (offsetX + 1.0f) / 16.001f;
+		up = (offsetY + 1.0f) / 16.2f;
+		down = (offsetY) / 16.0f;
+		left = (offsetX) / 16.0f;
+		right = (offsetX + 1.0f) / 16.0f;
 		
 		// create our vertex buffer objects
 		IntBuffer buffer = BufferUtils.createIntBuffer(1);
-		GL15.glGenBuffers(buffer);
+		glGenBuffers(buffer);
 		
 		vertex_buffer_id = buffer.get(0);
 		
-		initVBO();
+		initVBO(); // populates vertex_buffer_data
 		
 		vertex_buffer_data = BufferUtils.createFloatBuffer(vertex_data_array.length);
 		vertex_buffer_data.put(vertex_data_array);
 		vertex_buffer_data.rewind();
 		
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_2D);
+		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
+		glBufferData(GL_ARRAY_BUFFER, vertex_buffer_data, GL_STATIC_DRAW);
+		
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 	
 	public void initVBO()
@@ -49,18 +69,30 @@ public class Shape
 	
 	public void render(float scaleX, float scaleY, float scaleZ)
 	{
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertex_buffer_id);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertex_buffer_data, GL15.GL_STATIC_DRAW);
+		glScalef(scaleX, scaleY, scaleZ);
+		render();
+	}
+	
+	public float[] getVertexArray()
+	{
+		return vertex_data_array;
+	}
+	
+	public void render()
+	{
+		glPushMatrix();
 		
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
+		if(this.scale != 1.0f)
+			glScalef(scale, scale, scale);
 		
-		// render the cube
-		GL11.glVertexPointer(3, GL11.GL_FLOAT, 48, 0);
-		GL11.glNormalPointer(GL11.GL_FLOAT, 48, 12);
-		GL11.glColorPointer(4, GL11.GL_FLOAT, 48, 24);
-		GL11.glTexCoordPointer(2, GL11.GL_FLOAT, 48, 40);
+		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
 		
-		GL11.glScalef(scaleX, scaleY, scaleZ);
-		GL11.glDrawArrays(GL11.GL_QUADS, 0, vertex_data_array.length / 12);
+		glVertexPointer(3, GL_FLOAT, 32, 0);
+		glNormalPointer(GL_FLOAT, 32, 12);
+		glTexCoordPointer(2, GL_FLOAT, 32, 24);
+		
+		glDrawArrays(GL_QUADS, 0, vertex_data_array.length / 8);
+		
+		glPopMatrix();
 	}
 }

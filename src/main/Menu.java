@@ -32,7 +32,10 @@ public class Menu
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			
+			clear();
+			gameApplet.game.console = true;
+			gameApplet.game.startServerMode();
+			gameApplet.game.startMultiplayerMode();
 		}
 	}
 	
@@ -77,7 +80,7 @@ public class Menu
 		Button singlePlayerButton = new Button("Single Player");
 		singlePlayerButton.addActionListener(new SinglePlayerButton());
 		singlePlayerButton.setPreferredSize(new Dimension(400,32));
-		singlePlayerButton.setEnabled(false);
+		//singlePlayerButton.setEnabled(false);
 		c.gridx = 0;
 		c.gridy = 0;
 		c.insets = new Insets(10,0,0,0);
@@ -137,6 +140,7 @@ public class Menu
 		
 		serverField = new TextField();
 		serverField.setPreferredSize(new Dimension(400,32));
+		serverField.setText("localhost");
 		c.gridx = 0;
 		c.gridy++;
 		c.insets = new Insets(10,0,0,0);
