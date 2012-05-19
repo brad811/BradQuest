@@ -92,6 +92,7 @@ public class Shape
 		glTexCoordPointer(2, GL_FLOAT, 32, 24);
 		
 		glDrawArrays(GL_QUADS, 0, vertex_data_array.length / 8);
+		//glDrawElements(GL_QUADS, vertex_data_array.length / 8, GL_FLOAT, 0);
 		
 		glPopMatrix();
 	}

@@ -6,7 +6,7 @@ public class Game
 	public static final int port = 2222;
 	
 	public static final int tileSize = 32;
-	public static final int FPS = 60;
+	public static final int FPS = 10060;
 	public static final int TPS = 60;
 	public static final int mapSize = 1000;
 	
@@ -22,7 +22,8 @@ public class Game
 	ServerMode serverMode;
 	public boolean console = false;
 	
-	public Map map;
+	public Map clientMap;
+	public Map serverMap;
 	
 	public boolean loaded = false;
 	
@@ -52,7 +53,8 @@ public class Game
 	
 	public void quit()
 	{
-		map = null;
+		clientMap = null;
+		serverMap = null;
 		loaded = false;
 		
 		// clean up server mode and client mode

@@ -1,5 +1,7 @@
 package render;
 
+import java.nio.FloatBuffer;
+
 import java.util.ArrayList;
 
 import main.GameApplet;
@@ -46,14 +48,14 @@ public class Renderer
 		
 		// Head
 		int tileX = 3, tileY = 0;
-		Cube head = new Cube(0.5f);
+		Cube head = new Cube();
 		head.init(tileX, tileY);
 		tree.add(head);
 		
 		// Torso
 		tileX = 1;
 		tileY = 0;
-		Cube torso = new Cube(0.5f);
+		Cube torso = new Cube();
 		torso.init(tileX, tileY);
 		tree.add(torso);
 		

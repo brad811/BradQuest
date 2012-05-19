@@ -28,7 +28,7 @@ public class ServerMode extends Mode implements Runnable
 	public void tick()
 	{
 		// do all the stuff that the entities should do
-		game.map.serverTick();
+		game.serverMap.serverTick();
 	}
 	
 	public void start()
@@ -36,7 +36,7 @@ public class ServerMode extends Mode implements Runnable
 		lastTime = System.currentTimeMillis();
 		curTime = System.currentTimeMillis();
 		
-		game.map = new Map();
+		game.serverMap = new Map();
 		
 		if(!game.console)
 			gameApplet.menu.serverScreen();
@@ -49,13 +49,13 @@ public class ServerMode extends Mode implements Runnable
 		long lastTick = 0L;
 		
 		GeneratorThread gen = new GeneratorThread();
-		gen.setMap(game.map);
+		gen.setMap(game.serverMap);
 		gen.start();
 		
 		int percent = 0, lastPercent = 0;
 		while(percent < 100 && !quit)
 		{
-			percent = (int)game.map.percentGenerated;
+			percent = (int)game.serverMap.percentGenerated;
 			if(percent >= lastPercent)
 			{
 				say("Generating map... " +  Integer.toString(percent) + "%");

@@ -42,7 +42,7 @@ public class Tree extends SolidTile
 		Tile.models.get(Tile.TILE_TREE).get(0).render(0.5f, 0.5f, 1.0f);
 		
 		// Leaves
-		glTranslatef(0.0f, 0.0f, 1.0f);
+		glTranslatef(0.0f, 0.0f, 0.75f);
 		Tile.models.get(Tile.TILE_TREE).get(1).render(1.5f, 1.5f, 0.5f);
 	}
 }

@@ -78,7 +78,7 @@ public class Server
 		{
 			if(!players.containsKey(name))
 			{
-				players.put(name, new Player(game.map, Game.mapSize/2, Game.mapSize/2));
+				players.put(name, new Player(game.serverMap, Game.mapSize/2, Game.mapSize/2));
 				players.get(name).name = name;
 				players.get(name).setX( (Game.mapSize*Game.tileSize)/2 );
 				players.get(name).setY( (Game.mapSize*Game.tileSize)/2 );
@@ -106,12 +106,12 @@ public class Server
 			player.setY(y);
 			player.direction = direction;
 			
-			ItemEntity item = game.map.pickUpItemEntities(player);
+			ItemEntity item = game.serverMap.pickUpItemEntities(player);
 			
 			try {
 				if(!item.equals(null))
 				{
-					game.map.serverRemoveItemEntity(item.entityId);
+					game.serverMap.serverRemoveItemEntity(item.entityId);
 					players.get(name).addItem(item.item);
 					broadcast("item get|"+name+"|"+item.entityId+"|"+item.name);
 				}
@@ -127,7 +127,7 @@ public class Server
 			int x = Integer.parseInt(message[1]);
 			int y = Integer.parseInt(message[2]);
 			int id = Integer.parseInt(message[3]);
-			game.map.setTile(x, y, id);
+			game.serverMap.setTile(x, y, id);
 			
 			broadcast(msg);
 		}
@@ -136,12 +136,12 @@ public class Server
 			int x = Integer.parseInt(message[1]);
 			int y = Integer.parseInt(message[2]);
 			
-			SolidTile tile = (SolidTile) game.map.tiles[x][y];
+			SolidTile tile = (SolidTile) game.serverMap.tiles[x][y];
 			tile.destroy();
 			
 			broadcast("tile|"+tile.x+"|"+tile.y+"|"+tile.id);
 			
-			Iterator<Entry<Integer, ItemEntity>> it = game.map.itemEntities.entrySet().iterator();
+			Iterator<Entry<Integer, ItemEntity>> it = game.serverMap.itemEntities.entrySet().iterator();
 			
 			while(it.hasNext() && !quit)
 			{
@@ -204,12 +204,12 @@ public class Server
 				if(j != 0)
 					msg += ",";
 				
-				msg += game.map.tiles[i][j].id;
+				msg += game.serverMap.tiles[i][j].id;
 			}
 			send(out, msg);
 		}
 		
-		Iterator<Entry<Integer, ItemEntity>> it = game.map.itemEntities.entrySet().iterator();
+		Iterator<Entry<Integer, ItemEntity>> it = game.serverMap.itemEntities.entrySet().iterator();
 		
 		while(it.hasNext() && !quit)
 		{

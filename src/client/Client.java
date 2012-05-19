@@ -164,7 +164,7 @@ public class Client implements Runnable
 			return;
 		
 		boolean found = false;
-		for(Player p : game.map.players)
+		for(Player p : game.clientMap.players)
 		{
 			if(p.name.equals(playerData[1]))
 			{
@@ -179,8 +179,8 @@ public class Client implements Runnable
 		if(!found)
 		{
 			System.out.println("Adding player: " + playerData[1]);
-			Player p = new Player(null,game.map,playerData[1]);
-			game.map.players.add(p);
+			Player p = new Player(null,game.clientMap,playerData[1]);
+			game.clientMap.players.add(p);
 		}
 	}
 	
@@ -191,12 +191,12 @@ public class Client implements Runnable
 		
 		for (; j < tiles.length; j++)
 		{
-			game.map.setTile(i, j, Integer.parseInt(tiles[j]));
+			game.clientMap.setTile(i, j, Integer.parseInt(tiles[j]));
 		}
 		
 		if(!loaded)
 		{
-			game.map.percentLoaded = (Double.parseDouble(mapData[1])+1)/Game.mapSize;
+			game.clientMap.percentLoaded = (Double.parseDouble(mapData[1])+1)/Game.mapSize;
 		}
 	}
 	
@@ -220,7 +220,7 @@ public class Client implements Runnable
 	
 	public void parseTileData(String tileData[])
 	{
-		game.map.setTile(
+		game.clientMap.setTile(
 				Integer.parseInt(tileData[1]), // x
 				Integer.parseInt(tileData[2]), // y
 				Integer.parseInt(tileData[3])  // type
@@ -234,13 +234,13 @@ public class Client implements Runnable
 		int x = Integer.parseInt(itemData[3]);
 		int y = Integer.parseInt(itemData[4]);
 		
-		if(game.map.hasItemEntity(entityId))
+		if(game.clientMap.hasItemEntity(entityId))
 			return;
 		
 		if(name.equals("log"))
 		{
 			//System.out.println("Adding item to map! ("+entityId+")(client)");
-			game.map.addItemEntity(new LogEntity(game.map,x,y,entityId));
+			game.clientMap.addItemEntity(new LogEntity(game.clientMap,x,y,entityId));
 		}
 	}
 	
@@ -249,10 +249,10 @@ public class Client implements Runnable
 		System.out.println("Item remove data!");
 		int entityId = Integer.parseInt(itemRemoveData[1]);
 		
-		if(game.map.hasItemEntity(entityId))
+		if(game.clientMap.hasItemEntity(entityId))
 		{
 			System.out.println("Removing!");
-			game.map.removeItemEntity(entityId);
+			game.clientMap.removeItemEntity(entityId);
 		}
 	}
 	
@@ -261,12 +261,12 @@ public class Client implements Runnable
 		String name = itemGetData[1];
 		int entityId = Integer.parseInt(itemGetData[2]);
 		
-		if(name.equals(game.getPlayer().name) && game.map.hasItemEntity(entityId))
+		if(name.equals(game.getPlayer().name) && game.clientMap.hasItemEntity(entityId))
 		{
 			//String itemName = itemGetData[2];
 			game.getPlayer().addItem(new Log());
 		}
-		game.map.removeItemEntity(entityId);
+		game.clientMap.removeItemEntity(entityId);
 	}
 	
 	public void tick()

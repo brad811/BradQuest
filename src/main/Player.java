@@ -258,8 +258,13 @@ public class Player
 		glLoadIdentity(); // Reset The View
 		glTranslatef(x/Game.tileSize - 0.5f, y/Game.tileSize - 0.5f, -size * 0.6f); // Move down into position
 		
+		// body
+		glScalef(0.5f, 0.6f, 0.5f);
+		glTranslatef(0.0f, 0.0f, 1.0f);
 		model.get(1).render();
 		
+		// head
+		glScalef(0.7f, 0.7f, 0.8f);
 		glTranslatef(0.0f, 0.0f, 1.0f);
 		model.get(0).render();
 	}

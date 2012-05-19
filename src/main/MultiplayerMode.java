@@ -45,11 +45,11 @@ public class MultiplayerMode extends Mode implements Runnable
 	
 	public void keepStarting()
 	{
-		game.map = new Map();
+		game.clientMap = new Map();
 		
 		input = new Input();
 		
-		player = new Player(input, game.map, name);
+		player = new Player(input, game.clientMap, name);
 		
 		System.out.println("Trying to connect...");
 		client = new Client(game);
@@ -106,7 +106,7 @@ public class MultiplayerMode extends Mode implements Runnable
 	{
 		long lastTick = 0L;
 		
-		while ((!Client.loaded || game.map.percentLoaded < 1.0) && !quit)
+		while ((!Client.loaded || game.clientMap.percentLoaded < 1.0) && !quit)
 		{
 			repaint();
 		}
@@ -188,7 +188,7 @@ public class MultiplayerMode extends Mode implements Runnable
 		try
 		{
 			bufferGraphics.fillRect(width / 2 - w / 2 + 2, height / 2 - h / 2 + 2,
-					(int) ((double) (w - 4) * (double) (game.map.percentLoaded)), h - 4);
+					(int) ((double) (w - 4) * (double) (game.clientMap.percentLoaded)), h - 4);
 		} catch (NullPointerException e)
 		{
 			// Either buffer graphics or map not ready, most likely
@@ -197,12 +197,12 @@ public class MultiplayerMode extends Mode implements Runnable
 	
 	public void render(int width, int height)
 	{
-		game.map.render(width, height, getPlayer().getX(), getPlayer().getY());
+		game.clientMap.render(width, height, getPlayer().getX(), getPlayer().getY());
 		
 		try
 		{
 			Player p;
-			Iterator<Player> i = game.map.players.iterator();
+			Iterator<Player> i = game.clientMap.players.iterator();
 			while (i.hasNext() && !quit)
 			{
 				p = (Player) i.next();
@@ -216,7 +216,7 @@ public class MultiplayerMode extends Mode implements Runnable
 		getPlayer().render();
 		
 		// Move this to last when it's not immediate anymore
-		game.map.renderItemEntities(game.getPlayer().getX(), game.getPlayer().getY());
+		game.clientMap.renderItemEntities(game.getPlayer().getX(), game.getPlayer().getY());
 		
 		lastTime = curTime;
 		curTime = System.currentTimeMillis();
