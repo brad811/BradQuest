@@ -1,6 +1,6 @@
 package tiles;
 
-import static org.lwjgl.opengl.GL11.*;
+import render.Renderer;
 
 import items.ItemEntity;
 import items.LogEntity;
@@ -35,14 +35,16 @@ public class Tree extends SolidTile
 	{
 		bottom.render(screenX, screenY);
 		
-		glLoadIdentity(); // Reset The View
-		glTranslatef(screenX, screenY, 0.0f); // Move down into position
+		Renderer.addTile(
+				Tile.models.get(Tile.TILE_TREE).get(0).vertex_data_array, 
+				screenX, screenY, 0.0f, 
+				0.5f, 0.5f, 1.0f
+			);
 		
-		// Trunk
-		Tile.models.get(Tile.TILE_TREE).get(0).render(0.5f, 0.5f, 1.0f);
-		
-		// Leaves
-		glTranslatef(0.0f, 0.0f, 0.75f);
-		Tile.models.get(Tile.TILE_TREE).get(1).render(1.5f, 1.5f, 0.5f);
+		Renderer.addTile(
+				Tile.models.get(Tile.TILE_TREE).get(1).vertex_data_array, 
+				screenX, screenY, 1.0f, 
+				0.8f, 0.8f, 0.8f
+			);
 	}
 }

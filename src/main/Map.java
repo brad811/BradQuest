@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import render.Renderer;
 import tiles.*;
 
 public class Map
@@ -180,7 +181,7 @@ public class Map
 				try
 				{
 					tiles[i][j].render(
-							i - ((float)(playerX % Game.tileSize) / (float)Game.tileSize),
+							i - ((float)(playerX % Game.tileSize) / (float)Game.tileSize), 
 							j - ((float)(playerY % Game.tileSize) / (float)Game.tileSize)
 						);
 				} catch (ArrayIndexOutOfBoundsException e)
@@ -192,5 +193,7 @@ public class Map
 				}
 			}
 		}
+		
+		Renderer.renderMap();
 	}
 }

@@ -5,8 +5,6 @@ import java.util.HashMap;
 
 import items.Item;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import render.Plane;
 import render.Renderer;
 import render.Shape;
@@ -95,10 +93,7 @@ public class Tile
 	
 	public void render(float screenX, float screenY)
 	{
-		glLoadIdentity(); // Reset The View
-		glTranslatef(screenX, screenY, -1.0f); // Move down into position
-		
-		planes.get(id).render();
+		Renderer.addTile(Tile.planes.get(this.id).vertex_data_array, screenX, screenY, -1.0f, 1.0f, 1.0f, 1.0f);
 	}
 	
 	public void tick()

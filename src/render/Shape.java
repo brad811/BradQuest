@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL15.*;
 
 public class Shape
 {
-	float[] vertex_data_array;
+	public float[] vertex_data_array;
 	public int offsetX = 0, offsetY = 0;
 	float up, down, left, right;
 	
@@ -92,7 +92,6 @@ public class Shape
 		glTexCoordPointer(2, GL_FLOAT, 32, 24);
 		
 		glDrawArrays(GL_QUADS, 0, vertex_data_array.length / 8);
-		//glDrawElements(GL_QUADS, vertex_data_array.length / 8, GL_FLOAT, 0);
 		
 		glPopMatrix();
 	}

@@ -34,8 +34,6 @@ public class SolidTile extends Tile
 	
 	public void render(Graphics g, int screenX, int screenY)
 	{
-		bottom.render(screenX, screenY);
-		super.render(screenX, screenY);
 	}
 	
 	public void strike(Item item)

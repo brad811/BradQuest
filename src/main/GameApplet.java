@@ -13,6 +13,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.newdawn.slick.opengl.Texture;
 
+import render.Renderer;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.*;
 
@@ -180,11 +182,15 @@ public class GameApplet extends Applet
 		
 		glEnable(GL_TEXTURE_2D);
 		glShadeModel(GL_SMOOTH); // Enables Smooth Shading
-		glClearColor(1.0f, 0.0f, 0.0f, 0.0f); // Black Background
+		glClearColor(0.4f, 0.5f, 1.0f, 0.0f); // Black Background
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
 		glDepthFunc(GL_LEQUAL); // The Type Of Depth Test To Do
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice Perspective Calculations
+		
+		glEnable(GL_CULL_FACE);
+		
+		Renderer.init();
 		
 		/*
 		float lightLevel = 0.8f;
