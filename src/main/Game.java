@@ -6,7 +6,7 @@ public class Game
 	public static final int port = 2222;
 	
 	public static final int tileSize = 32;
-	public static final int FPS = 10060;
+	public static final int FPS = 100060;
 	public static final int TPS = 60;
 	public static final int mapSize = 1000;
 	

@@ -31,19 +31,19 @@ public class Tree extends SolidTile
 	}
 	
 	// Eventually this should go away, and just add a model to be rendered in the constructor, in SolidTile
-	public void render(float screenX, float screenY)
+	public void render()
 	{
-		bottom.render(screenX, screenY);
+		bottom.render();
 		
 		Renderer.addTile(
 				Tile.models.get(Tile.TILE_TREE).get(0).vertex_data_array, 
-				screenX, screenY, 0.0f, 
+				x, y, 0.0f, 
 				0.5f, 0.5f, 1.0f
 			);
 		
 		Renderer.addTile(
 				Tile.models.get(Tile.TILE_TREE).get(1).vertex_data_array, 
-				screenX, screenY, 1.0f, 
+				x, y, 1.0f, 
 				0.8f, 0.8f, 0.8f
 			);
 	}

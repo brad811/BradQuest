@@ -180,10 +180,7 @@ public class Map
 			{
 				try
 				{
-					tiles[i][j].render(
-							i - ((float)(playerX % Game.tileSize) / (float)Game.tileSize), 
-							j - ((float)(playerY % Game.tileSize) / (float)Game.tileSize)
-						);
+					tiles[i][j].render();
 				} catch (ArrayIndexOutOfBoundsException e)
 				{
 					//System.out.println("AIOOBE!");

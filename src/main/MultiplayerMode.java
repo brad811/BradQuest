@@ -218,23 +218,6 @@ public class MultiplayerMode extends Mode implements Runnable
 		// Move this to last when it's not immediate anymore
 		game.clientMap.renderItemEntities(game.getPlayer().getX(), game.getPlayer().getY());
 		
-		lastTime = curTime;
-		curTime = System.currentTimeMillis();
-		//Long fps = 1000 / (curTime - lastTime);
-		
-		/*
-		bufferGraphics.setColor(Color.white);
-		bufferGraphics.fillRect(8, 8, 134, 42);
-		
-		bufferGraphics.setFont(new Font("", Font.PLAIN, 12));
-		bufferGraphics.setColor(Color.black);
-		bufferGraphics.drawString("FPS: " + Long.toString(fps), 10, 20);
-		
-		bufferGraphics.drawString("Pos: ("
-				+ ((double) ((int) (((double) getPlayer().x / (double) Game.tileSize) * 10)) / 10) + ","
-				+ ((double) ((int) (((double) getPlayer().y / (double) Game.tileSize) * 10)) / 10) + ")", 10, 32);
-		*/
-		
 		// bufferGraphics.drawString("Seed: " + map.seed, 10, 46);
 		
 		//getPlayer().playerInventory.render(width, height);

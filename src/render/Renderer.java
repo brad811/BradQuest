@@ -126,24 +126,18 @@ public class Renderer
 			}
 		}
 		
-		/**/
 		vertex_buffer_data = BufferUtils.createFloatBuffer(vertex_data_array.length);
 		vertex_buffer_data.put(vertex_data_array);
 		vertex_buffer_data.rewind();
 		
 		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
 		glBufferData(GL_ARRAY_BUFFER, vertex_buffer_data, GL_STATIC_DRAW);
-		/**/
-		
-		glPushMatrix();
 		
 		glVertexPointer(3, GL_FLOAT, 32, 0);
 		glNormalPointer(GL_FLOAT, 32, 12);
 		glTexCoordPointer(2, GL_FLOAT, 32, 24);
 		
 		glDrawArrays(GL_QUADS, 0, vertex_data_array.length / 8);
-		
-		glPopMatrix();
 		
 		renderList.clear();
 	}

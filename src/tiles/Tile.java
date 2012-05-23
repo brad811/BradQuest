@@ -91,9 +91,13 @@ public class Tile
 		return tile;
 	}
 	
-	public void render(float screenX, float screenY)
+	public void render()
 	{
-		Renderer.addTile(Tile.planes.get(this.id).vertex_data_array, screenX, screenY, -1.0f, 1.0f, 1.0f, 1.0f);
+		Renderer.addTile(
+				Tile.planes.get(this.id).vertex_data_array, 
+				x, y, -1.0f, 
+				1.0f, 1.0f, 1.0f
+			);
 	}
 	
 	public void tick()

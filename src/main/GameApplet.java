@@ -6,8 +6,10 @@ import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.nio.FloatBuffer;
 import java.util.Date;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -92,17 +94,18 @@ public class GameApplet extends Applet
 		MultiplayerMode.init();
 		game.getPlayer().init();
 		
-		
 		int framerate_count = 0;
 		long framerate_timestamp = new Date().getTime();
 		
+		Date d;
+		long this_framerate_timestamp;
 		
 		while(running)
 		{
 			framerate_count++;
 
-			Date d = new Date();
-			long this_framerate_timestamp = d.getTime();
+			d = new Date();
+			this_framerate_timestamp = d.getTime();
 			
 			if ((this_framerate_timestamp - framerate_timestamp) >= 1000)
 			{
@@ -113,7 +116,6 @@ public class GameApplet extends Applet
 			}
 			
 			render();
-			//glPopMatrix();
 			Display.sync(Game.FPS);
 			Display.update();
 		}
@@ -172,10 +174,6 @@ public class GameApplet extends Applet
 		int height = Display.getDisplayMode().getHeight();
 		
 		glViewport(0, 0, width, height); // Reset The Current Viewport
-		glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
-		glLoadIdentity(); // Reset The Projection Matrix
-		
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		
 		glMatrixMode(GL_MODELVIEW); // Select The Modelview Matrix
 		glLoadIdentity(); // Reset The Modelview Matrix
@@ -192,25 +190,23 @@ public class GameApplet extends Applet
 		
 		Renderer.init();
 		
-		/*
-		float lightLevel = 0.8f;
+		/**/
+		float lightLevel = 1.0f;
 		FloatBuffer lightAmbient = BufferUtils.createFloatBuffer(4).put(new float[] { lightLevel, lightLevel, lightLevel, 1.0f });
 		FloatBuffer lightDiffuse = BufferUtils.createFloatBuffer(4).put(new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
-		FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4).put(new float[] { 0.0f, 0.0f, 2.0f, 1.0f });
+		FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4).put(new float[] { -3.0f, -3.0f, 5.0f, 0.0f });
 		
 		lightAmbient.flip();
 		lightDiffuse.flip();
 		lightPosition.flip();
 		
-	    glLight(GL_LIGHT1, GL_AMBIENT, lightAmbient); // Setup The Ambient Light
-	    glLight(GL_LIGHT1, GL_DIFFUSE, lightDiffuse); // Setup The Diffuse Light
-	    glLight(GL_LIGHT1, GL_POSITION, lightPosition); // Position The Light
-	    glEnable(GL_LIGHT1); // Enable Light One
-	    
-	    glEnable(GL_COLOR_MATERIAL);
-	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	    glEnable(GL_LIGHTING);
-	    */
+		glLight(GL_LIGHT1, GL_AMBIENT, lightAmbient); // Setup The Ambient Light
+		glLight(GL_LIGHT1, GL_DIFFUSE, lightDiffuse); // Setup The Diffuse Light
+		glLight(GL_LIGHT1, GL_POSITION, lightPosition); // Position The Light
+		glEnable(GL_LIGHT1); // Enable Light One
+		
+		glEnable(GL_LIGHTING);
+	    /**/
 	}
 	
 	public static Texture getItemsTexture()
@@ -251,16 +247,17 @@ public class GameApplet extends Applet
 		
 		gluLookAt(
 				// Be over the player
-				(game.getPlayer().getX() / Game.tileSize) - 0.5f, (game.getPlayer().getY() / Game.tileSize) + cameraTilt, cameraHeight,	// Eyes
+				((float)game.getPlayer().getX() / (float)Game.tileSize) - 0.5f, 
+				((float)game.getPlayer().getY() / (float)Game.tileSize) + cameraTilt,
+				cameraHeight,	// Eyes
 				
 				// Look at the player
-				(game.getPlayer().getX() / Game.tileSize) - 0.5f, (game.getPlayer().getY() / Game.tileSize) + 0.0f, 0.0f,	// Center
+				((float)game.getPlayer().getX() / (float)Game.tileSize) - 0.5f, 
+				((float)game.getPlayer().getY() / (float)Game.tileSize) + 0.0f, 
+				0.0f,	// Center
 				
 				0.0f, 0.0f, 1.0f	// Up
 			);
-		
-		glMatrixMode(GL_MODELVIEW); // Select The Modelview Matrix
-		glLoadIdentity(); // Reset The Modelview Matrix
 	}
 	
 	public void destroy()

@@ -255,18 +255,18 @@ public class Player
 		
 		//Strike.render(playerTexture, screenX, screenY, direction);
 		
-		glLoadIdentity(); // Reset The View
-		glTranslatef(x/Game.tileSize - 0.5f, y/Game.tileSize - 0.5f, -size * 0.6f); // Move down into position
+		//glLoadIdentity(); // Reset The View
+		//glTranslatef(x/Game.tileSize - 0.5f, y/Game.tileSize - 0.5f, -size * 0.6f); // Move down into position
 		
 		// body
-		glScalef(0.5f, 0.6f, 0.5f);
-		glTranslatef(0.0f, 0.0f, 1.0f);
-		model.get(1).render();
+		//glScalef(0.5f, 0.6f, 0.5f);
+		//glTranslatef(0.0f, 0.0f, 1.0f);
+		//model.get(1).render();
 		
 		// head
-		glScalef(0.7f, 0.7f, 0.8f);
-		glTranslatef(0.0f, 0.0f, 1.0f);
-		model.get(0).render();
+		//glScalef(0.7f, 0.7f, 0.8f);
+		//glTranslatef(0.0f, 0.0f, 1.0f);
+		//model.get(0).render();
 	}
 	
 	public void renderOther(int playerX, int playerY)
@@ -291,10 +291,10 @@ public class Player
 		glLoadIdentity(); // Reset The View
 		glTranslatef(playerX/Game.tileSize - 0.5f, playerY/Game.tileSize - 0.5f, -size * 0.6f); // Move down into position
 		
-		model.get(0).render();
+		//model.get(0).render();
 		
 		glTranslatef(0.0f, 0.0f, 1.0f);
-		model.get(1).render();
+		//model.get(1).render();
 	}
 	
 	public int getX()
