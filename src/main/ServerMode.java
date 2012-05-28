@@ -54,7 +54,7 @@ public class ServerMode extends Mode implements Runnable
 		
 		int percent = 0, lastPercent = 0;
 		while(percent < 100 && !quit)
-		{
+		{System.out.println("ServerMode - run1");
 			percent = (int)game.serverMap.percentGenerated;
 			if(percent >= lastPercent)
 			{
@@ -82,7 +82,7 @@ public class ServerMode extends Mode implements Runnable
 		}
 		
 		while(!quit)
-		{
+		{System.out.println("ServerMode - run2");
 			Long startTime = System.currentTimeMillis();
 			
 			if(startTime - lastTick >= 1000/Game.TPS)

@@ -1,11 +1,11 @@
 package main;
 
+import gui.Gui;
+
 import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.nio.FloatBuffer;
 import java.util.Date;
 
@@ -28,12 +28,11 @@ public class GameApplet extends Applet
 	
 	public Menu menu;
 	
-	Dimension dim = new Dimension(640, 480);
-	
-	Graphics bufferGraphics;
-	Image offscreen;
+	public static Dimension dim = new Dimension(854, 480);
 	
 	public Game game;
+	public Gui gui;
+	public MultiplayerMode multiplayerMode;
 	
 	long lastFrameTime; // used to calculate delta
 	public boolean closeRequested = false;
@@ -47,22 +46,54 @@ public class GameApplet extends Applet
 		setSize(dim);
 		
 		game = new Game();
+		gui = new Gui();
+		
 		MultiplayerMode.gameApplet = this;
 		ServerMode.gameApplet = this;
-		menu = new Menu(this);
-		menu.mainMenu();
+		
+		gui.currentScreen = Gui.GUI_MAIN_MENU;
 	}
 	
 	public void start()
-	{
-		
+	{say("start");
+		this.run();
 	}
 	
-	public void startLWJGL()
-	{say("startLWJGL");
+	public void run()
+	{say("run");
 		gameThread = new Thread() {
 			public void run()
 			{
+				setLayout(new BorderLayout());
+				try {
+					display_parent = new Canvas() {
+						private static final long serialVersionUID = 1L;
+						
+						public final void addNotify() {
+							super.addNotify();
+						}
+						public final void removeNotify() {
+							try
+							{
+								finalize();
+							} catch (Throwable e)
+							{
+								e.printStackTrace();
+							}
+							super.removeNotify();
+						}
+					};
+					display_parent.setSize(dim.width,dim.height);
+					add(display_parent);
+					display_parent.setFocusable(true);
+					display_parent.requestFocus();
+					display_parent.setIgnoreRepaint(true);
+					setVisible(true);
+				} catch (Exception e) {
+					System.err.println(e);
+					throw new RuntimeException("Unable to create display");
+				}
+				
 				running = true;
 				try {
 					Display.setParent(display_parent);
@@ -72,101 +103,26 @@ public class GameApplet extends Applet
 					e.printStackTrace();
 					return;
 				}
+				
 				gameLoop();
+				
+				remove(display_parent);
+				Display.destroy();
+				
+				say("gameThread - done");
 			}
 		};
+		
 		gameThread.start();
-	}
-	
-	private void stopLWJGL()
-	{say("stopLWJGL");
-		running = false;
-		try {
-			gameThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void gameLoop()
-	{say("gameLoop");
-		
-		MultiplayerMode.init();
-		game.getPlayer().init();
-		
-		int framerate_count = 0;
-		long framerate_timestamp = new Date().getTime();
-		
-		Date d;
-		long this_framerate_timestamp;
-		
-		while(running)
-		{
-			framerate_count++;
-
-			d = new Date();
-			this_framerate_timestamp = d.getTime();
-			
-			if ((this_framerate_timestamp - framerate_timestamp) >= 1000)
-			{
-				System.err.println("Frame Rate: " + framerate_count);
-
-				framerate_count = 0;
-				framerate_timestamp = this_framerate_timestamp;
-			}
-			
-			render();
-			Display.sync(Game.FPS);
-			Display.update();
-		}
-		
-		Display.destroy();
-	}
-	
-	public void say(String msg)
-	{
-		System.out.println(msg);
-	}
-	
-	public void run()
-	{say("run");
-		setLayout(new BorderLayout());
-		try {
-			display_parent = new Canvas() {
-				private static final long serialVersionUID = 1L;
-				
-				public final void addNotify() {
-					super.addNotify();
-				}
-				public final void removeNotify() {
-					stopLWJGL();
-					super.removeNotify();
-				}
-			};
-			display_parent.setSize(dim.width,dim.height);
-			add(display_parent);
-			display_parent.setFocusable(true);
-			display_parent.requestFocus();
-			//display_parent.setIgnoreRepaint(true);
-			setVisible(true);
-		} catch (Exception e) {
-			System.err.println(e);
-			throw new RuntimeException("Unable to create display");
-		}
-		
-		startLWJGL();
 	}
 	
 	private void initGL()
 	{say("initGL");
-		/* OpenGL */
-		
 		try
 		{
 			Display.setDisplayMode(new DisplayMode(dim.width, dim.height));
 		} catch (LWJGLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -190,7 +146,6 @@ public class GameApplet extends Applet
 		
 		Renderer.init();
 		
-		/**/
 		float lightLevel = 1.0f;
 		FloatBuffer lightAmbient = BufferUtils.createFloatBuffer(4).put(new float[] { lightLevel, lightLevel, lightLevel, 1.0f });
 		FloatBuffer lightDiffuse = BufferUtils.createFloatBuffer(4).put(new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
@@ -206,7 +161,83 @@ public class GameApplet extends Applet
 		glEnable(GL_LIGHT1); // Enable Light One
 		
 		glEnable(GL_LIGHTING);
-	    /**/
+	}
+	
+	public void gameLoop()
+	{say("gameLoop");
+		int framerate_count = 0;
+		long framerate_timestamp = new Date().getTime();
+		
+		Date d;
+		long this_framerate_timestamp;
+		
+		while(running)
+		{System.out.println("GameApplet - gameLoop");
+			framerate_count++;
+
+			d = new Date();
+			this_framerate_timestamp = d.getTime();
+			
+			if ((this_framerate_timestamp - framerate_timestamp) >= 1000)
+			{
+				System.err.println("Frame Rate: " + framerate_count);
+
+				framerate_count = 0;
+				framerate_timestamp = this_framerate_timestamp;
+			}
+			
+			render();
+			Display.sync(Game.FPS);
+			Display.update();
+		}
+		
+		System.out.println("GameApplet - gameLoop done");
+	}
+	
+	public void startMultiplayerMode()
+	{say("startMultiplayerMode");
+		multiplayerMode = new MultiplayerMode(game);
+		MultiplayerMode.init();
+		multiplayerMode.start();
+		
+		multiplayerMode.player.init();
+	}
+	
+	public void render()
+	{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
+		
+		gui.render();
+		
+		if(Client.loaded)
+		{
+			updateCamera();
+			multiplayerMode.render(dim.width, dim.height);
+		}
+	}
+	
+	public void updateCamera()
+	{
+		glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
+		glLoadIdentity(); // Reset The Projection Matrix
+		gluPerspective(45.0f, ((float) dim.width / (float) dim.height), 0.1f, 100.0f); // Calculate The Aspect Ratio Of The Window
+		
+		float cameraHeight = 17.0f;
+		float cameraTilt = -10.0f;
+		
+		gluLookAt(
+				// Be over the player
+				((float)multiplayerMode.player.getX() / (float)Game.tileSize) - 0.5f, 
+				((float)multiplayerMode.player.getY() / (float)Game.tileSize) + cameraTilt,
+				cameraHeight,	// Eyes
+				
+				// Look at the player
+				((float)multiplayerMode.player.getX() / (float)Game.tileSize) - 0.5f, 
+				((float)multiplayerMode.player.getY() / (float)Game.tileSize) + 0.0f, 
+				0.0f,	// Center
+				
+				0.0f, 0.0f, 1.0f	// Up
+			);
 	}
 	
 	public static Texture getItemsTexture()
@@ -219,55 +250,30 @@ public class GameApplet extends Applet
 		return MultiplayerMode.tilesTexture;
 	}
 	
-	public void render()
-	{
-		updateCamera();
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
-		
-		if(!Client.loaded)
-		{
-			display_parent.setIgnoreRepaint(false);
-			//game.multiplayerMode.paint(bufferGraphics, dim.width, dim.height);
-		}
-		else
-		{
-			display_parent.setIgnoreRepaint(true);
-			game.multiplayerMode.render(dim.width, dim.height);
-		}
-	}
-	
-	public void updateCamera()
-	{
-		glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
-		glLoadIdentity(); // Reset The Projection Matrix
-		gluPerspective(45.0f, ((float) 640 / (float) 480), 0.1f, 100.0f); // Calculate The Aspect Ratio Of The Window
-		
-		float cameraHeight = 17.0f;
-		float cameraTilt = -10.0f;
-		
-		gluLookAt(
-				// Be over the player
-				((float)game.getPlayer().getX() / (float)Game.tileSize) - 0.5f, 
-				((float)game.getPlayer().getY() / (float)Game.tileSize) + cameraTilt,
-				cameraHeight,	// Eyes
-				
-				// Look at the player
-				((float)game.getPlayer().getX() / (float)Game.tileSize) - 0.5f, 
-				((float)game.getPlayer().getY() / (float)Game.tileSize) + 0.0f, 
-				0.0f,	// Center
-				
-				0.0f, 0.0f, 1.0f	// Up
-			);
+	public void finalize()
+	{say("finalize");
+		destroy();
 	}
 	
 	public void destroy()
-	{
-		//Display.destroy();
+	{say("destroy");
 		game.quit();
+		
+		if(multiplayerMode != null)
+			multiplayerMode.quit();
+		
+		running = false;
+		try {
+			gameThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		super.destroy();
 	}
 	
-	public void finalize()
+	public void say(String msg)
 	{
-		destroy();
+		System.out.println(msg);
 	}
 }

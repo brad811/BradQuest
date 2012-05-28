@@ -35,7 +35,7 @@ public class Menu
 			clear();
 			gameApplet.game.console = true;
 			gameApplet.game.startServerMode();
-			gameApplet.game.startMultiplayerMode();
+			//gameApplet.game.startMultiplayerMode();
 		}
 	}
 	
@@ -44,7 +44,7 @@ public class Menu
 		public void actionPerformed(ActionEvent e)
 		{
 			clear();
-			gameApplet.game.startMultiplayerMode();
+			//gameApplet.game.startMultiplayerMode();
 		}
 	}
 	
@@ -74,7 +74,7 @@ public class Menu
 		//clear();
 		
 		gameApplet.setLayout(new GridBagLayout());
-		gameApplet.setPreferredSize(gameApplet.dim);
+		gameApplet.setPreferredSize(GameApplet.dim);
 		GridBagConstraints c = new GridBagConstraints();
 		
 		Button singlePlayerButton = new Button("Single Player");
@@ -112,7 +112,7 @@ public class Menu
 		clear();
 		
 		gameApplet.setLayout(new GridBagLayout());
-		gameApplet.setPreferredSize(gameApplet.dim);
+		gameApplet.setPreferredSize(GameApplet.dim);
 		GridBagConstraints c = new GridBagConstraints();
 		
 		Label nameLabel = new Label("Name");
@@ -166,7 +166,7 @@ public class Menu
 		serverOut = new TextArea();
 		serverOut.setBackground(Color.BLACK);
 		serverOut.setForeground(Color.WHITE);
-		serverOut.setPreferredSize(gameApplet.dim);
+		serverOut.setPreferredSize(GameApplet.dim);
 		serverOut.setEditable(false);
 		
 		gameApplet.add(serverOut);

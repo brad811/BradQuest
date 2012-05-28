@@ -1,7 +1,5 @@
 package main;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -26,6 +24,8 @@ public class MultiplayerMode extends Mode implements Runnable
 	public static Texture tilesTexture;
 	public static Texture itemsTexture;
 	
+	public Map clientMap;
+	
 	boolean connected = false;
 	boolean failed = false;
 	
@@ -35,6 +35,7 @@ public class MultiplayerMode extends Mode implements Runnable
 		game = g;
 		mode = Game.CLIENT_MODE;
 		Game.mode = mode;
+		System.out.println("multiplayerMode - created");
 	}
 	
 	public void start()
@@ -43,16 +44,17 @@ public class MultiplayerMode extends Mode implements Runnable
 		gameApplet.menu.multiplayerScreen(this);
 	}
 	
+	// This needs to change!!!! gameApplet.run() will break things
 	public void keepStarting()
 	{
-		game.clientMap = new Map();
+		clientMap = new Map();
 		
 		input = new Input();
 		
-		player = new Player(input, game.clientMap, name);
+		player = new Player(input, clientMap, name);
 		
 		System.out.println("Trying to connect...");
-		client = new Client(game);
+		client = new Client(this);
 		
 		if (!client.connect())
 		{
@@ -106,14 +108,14 @@ public class MultiplayerMode extends Mode implements Runnable
 	{
 		long lastTick = 0L;
 		
-		while ((!Client.loaded || game.clientMap.percentLoaded < 1.0) && !quit)
-		{
-			repaint();
+		while ((!Client.loaded || clientMap.percentLoaded < 1.0) && !quit)
+		{System.out.println("MultiplayerMode - run1");
+			// do something
 		}
 		
 		System.out.println("Entering main game loop...");
 		while (!quit)
-		{
+		{System.out.println("MultiplayerMode - run2");
 			input.getKeys();
 			Long startTime = System.currentTimeMillis();
 			
@@ -140,8 +142,8 @@ public class MultiplayerMode extends Mode implements Runnable
 					System.out.println("Thread sleep interrupted!");
 				}
 			}
-			repaint();
 		}
+		System.out.println("multiplayerMode - quit");
 	}
 	
 	public void tick()
@@ -150,73 +152,32 @@ public class MultiplayerMode extends Mode implements Runnable
 		
 		// map will now tick on the server
 		
-		getPlayer().tick();
+		player.tick();
 		client.tick();
-	}
-	
-	public Player getPlayer()
-	{
-		return game.getPlayer();
-	}
-	
-	public void repaint()
-	{
-		gameApplet.repaint();
-	}
-	
-	public void paint(Graphics bufferGraphics, int width, int height)
-	{
-		if (!connected)
-		{
-			// do something here
-			return;
-		}
-		
-		bufferGraphics.clearRect(0, 0, width, height);
-		
-		int w = 400, h = 20;
-		
-		bufferGraphics.setColor(Color.black);
-		bufferGraphics.drawString("Downloading map from server...", width / 2 - w / 2, height / 2 - h);
-		bufferGraphics.fillRect(width / 2 - w / 2, height / 2 - h / 2, w, h);
-		
-		bufferGraphics.setColor(Color.white);
-		bufferGraphics.fillRect(width / 2 - w / 2 + 2, height / 2 - h / 2 + 2, w - 4, h - 4);
-		
-		bufferGraphics.setColor(new Color(80, 100, 255));
-		
-		try
-		{
-			bufferGraphics.fillRect(width / 2 - w / 2 + 2, height / 2 - h / 2 + 2,
-					(int) ((double) (w - 4) * (double) (game.clientMap.percentLoaded)), h - 4);
-		} catch (NullPointerException e)
-		{
-			// Either buffer graphics or map not ready, most likely
-		}
 	}
 	
 	public void render(int width, int height)
 	{
-		game.clientMap.render(width, height, getPlayer().getX(), getPlayer().getY());
+		clientMap.render(width, height, player.getX(), player.getY());
 		
 		try
 		{
 			Player p;
-			Iterator<Player> i = game.clientMap.players.iterator();
+			Iterator<Player> i = clientMap.players.iterator();
 			while (i.hasNext() && !quit)
 			{
 				p = (Player) i.next();
-				p.renderOther(getPlayer().getX(), getPlayer().getY());
+				p.renderOther(player.getX(), player.getY());
 			}
 		} catch (ConcurrentModificationException e)
 		{
 			
 		}
 		
-		getPlayer().render();
+		player.render();
 		
 		// Move this to last when it's not immediate anymore
-		game.clientMap.renderItemEntities(game.getPlayer().getX(), game.getPlayer().getY());
+		clientMap.renderItemEntities(player.getX(), player.getY());
 		
 		// bufferGraphics.drawString("Seed: " + map.seed, 10, 46);
 		
@@ -229,6 +190,9 @@ public class MultiplayerMode extends Mode implements Runnable
 		connected = false;
 		
 		if(client != null)
+		{
 			client.quit();
+			System.out.println("client - quit");
+		}
 	}
 }

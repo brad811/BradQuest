@@ -25,14 +25,16 @@ public class Client implements Runnable
 	public static PrintWriter out = null;
 	BufferedReader in = null;
 	public Socket socket;
-	Game game;
+	MultiplayerMode multiplayerMode;
+	Player player;
 	boolean connected = false;
 	public static boolean loaded = false;
 	boolean quit = false;
 	
-	public Client(Game game)
+	public Client(MultiplayerMode multiplayerMode)
 	{
-		this.game = game;
+		this.multiplayerMode = multiplayerMode;
+		this.player = multiplayerMode.player;
 	}
 	
 	public void start()
@@ -62,13 +64,13 @@ public class Client implements Runnable
 			
 			// Handshake
 			// player | name | x | y | direction
-			out.println("name|"+game.getPlayer().name);
+			out.println("name|"+player.name);
 			String[] position = in.readLine().split("\\|");
-			if(position[1].equals(game.getPlayer().name))
+			if(position[1].equals(player.name))
 			{
-				game.getPlayer().setX( Integer.parseInt(position[2]) );
-				game.getPlayer().setY( Integer.parseInt(position[3]) );
-				game.getPlayer().direction = Integer.parseInt(position[4]);
+				player.setX( Integer.parseInt(position[2]) );
+				player.setY( Integer.parseInt(position[3]) );
+				player.direction = Integer.parseInt(position[4]);
 			}
 			else
 			{
@@ -97,7 +99,7 @@ public class Client implements Runnable
 	public void run()
 	{
 		while (!quit)
-		{
+		{System.out.println("Client - run");
 			String serverMessage = "";
 			
 			try
@@ -160,11 +162,11 @@ public class Client implements Runnable
 	{
 		// player|name|x|y|direction
 		
-		if(playerData[1].equals(game.getPlayer().name))
+		if(playerData[1].equals(player.name))
 			return;
 		
 		boolean found = false;
-		for(Player p : game.clientMap.players)
+		for(Player p : multiplayerMode.clientMap.players)
 		{
 			if(p.name.equals(playerData[1]))
 			{
@@ -179,8 +181,8 @@ public class Client implements Runnable
 		if(!found)
 		{
 			System.out.println("Adding player: " + playerData[1]);
-			Player p = new Player(null,game.clientMap,playerData[1]);
-			game.clientMap.players.add(p);
+			Player p = new Player(null,multiplayerMode.clientMap,playerData[1]);
+			multiplayerMode.clientMap.players.add(p);
 		}
 	}
 	
@@ -191,12 +193,12 @@ public class Client implements Runnable
 		
 		for (; j < tiles.length; j++)
 		{
-			game.clientMap.setTile(i, j, Integer.parseInt(tiles[j]));
+			multiplayerMode.clientMap.setTile(i, j, Integer.parseInt(tiles[j]));
 		}
 		
 		if(!loaded)
 		{
-			game.clientMap.percentLoaded = (Double.parseDouble(mapData[1])+1)/Game.mapSize;
+			multiplayerMode.clientMap.percentLoaded = (Double.parseDouble(mapData[1])+1)/Game.mapSize;
 		}
 	}
 	
@@ -211,7 +213,7 @@ public class Client implements Runnable
 				String itemName = info[0];
 				int itemQuantity = Integer.parseInt(info[1]);
 				
-				game.getPlayer().addItem(Item.getItemByName(itemName), itemQuantity);
+				player.addItem(Item.getItemByName(itemName), itemQuantity);
 			}
 		} catch(ArrayIndexOutOfBoundsException e) {
 			return;
@@ -220,7 +222,7 @@ public class Client implements Runnable
 	
 	public void parseTileData(String tileData[])
 	{
-		game.clientMap.setTile(
+		multiplayerMode.clientMap.setTile(
 				Integer.parseInt(tileData[1]), // x
 				Integer.parseInt(tileData[2]), // y
 				Integer.parseInt(tileData[3])  // type
@@ -234,13 +236,13 @@ public class Client implements Runnable
 		int x = Integer.parseInt(itemData[3]);
 		int y = Integer.parseInt(itemData[4]);
 		
-		if(game.clientMap.hasItemEntity(entityId))
+		if(multiplayerMode.clientMap.hasItemEntity(entityId))
 			return;
 		
 		if(name.equals("log"))
 		{
 			//System.out.println("Adding item to map! ("+entityId+")(client)");
-			game.clientMap.addItemEntity(new LogEntity(game.clientMap,x,y,entityId));
+			multiplayerMode.clientMap.addItemEntity(new LogEntity(multiplayerMode.clientMap,x,y,entityId));
 		}
 	}
 	
@@ -249,10 +251,10 @@ public class Client implements Runnable
 		System.out.println("Item remove data!");
 		int entityId = Integer.parseInt(itemRemoveData[1]);
 		
-		if(game.clientMap.hasItemEntity(entityId))
+		if(multiplayerMode.clientMap.hasItemEntity(entityId))
 		{
 			System.out.println("Removing!");
-			game.clientMap.removeItemEntity(entityId);
+			multiplayerMode.clientMap.removeItemEntity(entityId);
 		}
 	}
 	
@@ -261,17 +263,17 @@ public class Client implements Runnable
 		String name = itemGetData[1];
 		int entityId = Integer.parseInt(itemGetData[2]);
 		
-		if(name.equals(game.getPlayer().name) && game.clientMap.hasItemEntity(entityId))
+		if(name.equals(player.name) && multiplayerMode.clientMap.hasItemEntity(entityId))
 		{
 			//String itemName = itemGetData[2];
-			game.getPlayer().addItem(new Log());
+			player.addItem(new Log());
 		}
-		game.clientMap.removeItemEntity(entityId);
+		multiplayerMode.clientMap.removeItemEntity(entityId);
 	}
 	
 	public void tick()
 	{
-		out.println("player|"+game.getPlayer().name+"|"+game.getPlayer().getX()+"|"+game.getPlayer().getY()+"|"+game.getPlayer().direction);
+		out.println("player|"+player.name+"|"+player.getX()+"|"+player.getY()+"|"+player.direction);
 	}
 	
 	public void quit()

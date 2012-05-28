@@ -20,7 +20,7 @@ public class Map
 	public double percentLoaded = 0.0;
 	public double percentGenerated = 0.0;
 	
-	public int timeOfDay = 12000;
+	//public int timeOfDay = 12000;
 	
 	public ConcurrentHashMap<Integer,ItemEntity> itemEntities = new ConcurrentHashMap<Integer,ItemEntity>();
 	public HashSet<Player> players = new HashSet<Player>();
@@ -167,7 +167,7 @@ public class Map
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glBindTexture(GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
 		
-		int width = 32, height = 30;
+		int width = 40, height = 28;
 		for (int i = (playerX / Game.tileSize) - width/2;
 				i <= (playerX / Game.tileSize) + width/2;
 				i++

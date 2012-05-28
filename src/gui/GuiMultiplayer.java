@@ -1,14 +1,14 @@
 package gui;
 
-public class GuiMainMenu extends GuiScreen
+public class GuiMultiplayer extends GuiScreen
 {
-	public GuiMainMenu()
+	public GuiMultiplayer()
 	{
 		// add elements
 		elements.add(new GuiElementButton(-10,-20,130,140));
 	}
 	
-	public void multiplayerModeClicked()
+	public void joinServerClicked()
 	{
 		
 	}
