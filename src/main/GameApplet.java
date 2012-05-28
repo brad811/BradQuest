@@ -104,10 +104,9 @@ public class GameApplet extends Applet
 					return;
 				}
 				
-				gameLoop();
+				//gameLoop();
 				
-				remove(display_parent);
-				Display.destroy();
+				//remove(display_parent);
 				
 				say("gameThread - done");
 			}
@@ -172,7 +171,7 @@ public class GameApplet extends Applet
 		long this_framerate_timestamp;
 		
 		while(running)
-		{System.out.println("GameApplet - gameLoop");
+		{
 			framerate_count++;
 
 			d = new Date();
@@ -181,7 +180,7 @@ public class GameApplet extends Applet
 			if ((this_framerate_timestamp - framerate_timestamp) >= 1000)
 			{
 				System.err.println("Frame Rate: " + framerate_count);
-
+				
 				framerate_count = 0;
 				framerate_timestamp = this_framerate_timestamp;
 			}
@@ -191,6 +190,7 @@ public class GameApplet extends Applet
 			Display.update();
 		}
 		
+		Display.destroy();
 		System.out.println("GameApplet - gameLoop done");
 	}
 	
