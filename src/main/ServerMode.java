@@ -54,7 +54,7 @@ public class ServerMode extends Mode implements Runnable
 		
 		int percent = 0, lastPercent = 0;
 		while(percent < 100 && !quit)
-		{System.out.println("ServerMode - run1");
+		{
 			percent = (int)game.serverMap.percentGenerated;
 			if(percent >= lastPercent)
 			{
@@ -81,6 +81,7 @@ public class ServerMode extends Mode implements Runnable
 			say("Unable to start server! IOException!");
 		}
 		
+		// this only runs when there's a problem? a server already running? what does that mean?
 		while(!quit)
 		{System.out.println("ServerMode - run2");
 			Long startTime = System.currentTimeMillis();

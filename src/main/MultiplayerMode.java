@@ -1,5 +1,7 @@
 package main;
 
+import gui.Gui;
+
 import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -29,10 +31,10 @@ public class MultiplayerMode extends Mode implements Runnable
 	boolean connected = false;
 	boolean failed = false;
 	
-	public MultiplayerMode(Game g)
+	public MultiplayerMode(GameApplet g)
 	{
-		super(g);
-		game = g;
+		super(g.game);
+		gameApplet = g;
 		mode = Game.CLIENT_MODE;
 		Game.mode = mode;
 		System.out.println("multiplayerMode - created");
@@ -41,7 +43,7 @@ public class MultiplayerMode extends Mode implements Runnable
 	public void start()
 	{
 		// Move this to a new menu screen with text input for name, and server address input
-		gameApplet.menu.multiplayerScreen(this);
+		gameApplet.gui.setScreen(Gui.GUI_SINGLE_PLAYER_MENU);
 	}
 	
 	// This needs to change!!!! gameApplet.run() will break things
@@ -52,6 +54,7 @@ public class MultiplayerMode extends Mode implements Runnable
 		input = new Input();
 		
 		player = new Player(input, clientMap, name);
+		player.init();
 		
 		System.out.println("Trying to connect...");
 		client = new Client(this);
@@ -70,7 +73,6 @@ public class MultiplayerMode extends Mode implements Runnable
 		
 		System.out.println("Starting multiplayer mode...");
 		new Thread(this).start();
-		gameApplet.run();
 	}
 	
 	public static void init()
@@ -108,14 +110,18 @@ public class MultiplayerMode extends Mode implements Runnable
 	{
 		long lastTick = 0L;
 		
+		gameApplet.gui.setScreen(Gui.GUI_LOADING_MAP);
 		while ((!Client.loaded || clientMap.percentLoaded < 1.0) && !quit)
-		{System.out.println("MultiplayerMode - run1");
-			// do something
+		{
+			System.out.print(""); // for some reason putting this here makes the loading bar work...
+			gameApplet.gui.guiLoadingMap.setPercent((float)clientMap.percentLoaded);
 		}
+		
+		gameApplet.gui.setScreen(Gui.GUI_IN_GAME);
 		
 		System.out.println("Entering main game loop...");
 		while (!quit)
-		{System.out.println("MultiplayerMode - run2");
+		{
 			input.getKeys();
 			Long startTime = System.currentTimeMillis();
 			

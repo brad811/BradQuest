@@ -99,7 +99,7 @@ public class Client implements Runnable
 	public void run()
 	{
 		while (!quit)
-		{System.out.println("Client - run");
+		{
 			String serverMessage = "";
 			
 			try

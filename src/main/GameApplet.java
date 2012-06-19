@@ -1,5 +1,6 @@
 package main;
 
+import gui.FontRenderer;
 import gui.Gui;
 
 import java.applet.Applet;
@@ -46,7 +47,7 @@ public class GameApplet extends Applet
 		setSize(dim);
 		
 		game = new Game();
-		gui = new Gui();
+		gui = new Gui(this);
 		
 		MultiplayerMode.gameApplet = this;
 		ServerMode.gameApplet = this;
@@ -104,9 +105,9 @@ public class GameApplet extends Applet
 					return;
 				}
 				
-				//gameLoop();
+				gameLoop();
 				
-				//remove(display_parent);
+				Display.destroy();
 				
 				say("gameThread - done");
 			}
@@ -135,17 +136,22 @@ public class GameApplet extends Applet
 		
 		glEnable(GL_TEXTURE_2D);
 		glShadeModel(GL_SMOOTH); // Enables Smooth Shading
-		glClearColor(0.4f, 0.5f, 1.0f, 0.0f); // Black Background
+		glClearColor(0.4f, 0.5f, 1.0f, 0.0f); // Blue Background
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
 		glDepthFunc(GL_LEQUAL); // The Type Of Depth Test To Do
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice Perspective Calculations
 		
+		Renderer.init();
+		FontRenderer.init();
+		MultiplayerMode.init();
+		Gui.init();
+		
 		glEnable(GL_CULL_FACE);
 		
-		Renderer.init();
+		/**/
 		
-		float lightLevel = 1.0f;
+		float lightLevel = 2.0f;
 		FloatBuffer lightAmbient = BufferUtils.createFloatBuffer(4).put(new float[] { lightLevel, lightLevel, lightLevel, 1.0f });
 		FloatBuffer lightDiffuse = BufferUtils.createFloatBuffer(4).put(new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
 		FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4).put(new float[] { -3.0f, -3.0f, 5.0f, 0.0f });
@@ -159,7 +165,7 @@ public class GameApplet extends Applet
 		glLight(GL_LIGHT1, GL_POSITION, lightPosition); // Position The Light
 		glEnable(GL_LIGHT1); // Enable Light One
 		
-		glEnable(GL_LIGHTING);
+		/**/
 	}
 	
 	public void gameLoop()
@@ -185,6 +191,8 @@ public class GameApplet extends Applet
 				framerate_timestamp = this_framerate_timestamp;
 			}
 			
+			gui.handleInput();
+			
 			render();
 			Display.sync(Game.FPS);
 			Display.update();
@@ -196,24 +204,23 @@ public class GameApplet extends Applet
 	
 	public void startMultiplayerMode()
 	{say("startMultiplayerMode");
-		multiplayerMode = new MultiplayerMode(game);
+		multiplayerMode = new MultiplayerMode(this);
 		MultiplayerMode.init();
 		multiplayerMode.start();
-		
-		multiplayerMode.player.init();
 	}
 	
 	public void render()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
 		
-		gui.render();
-		
 		if(Client.loaded)
 		{
 			updateCamera();
+			glEnable(GL_LIGHTING);
 			multiplayerMode.render(dim.width, dim.height);
 		}
+		
+		gui.render();
 	}
 	
 	public void updateCamera()

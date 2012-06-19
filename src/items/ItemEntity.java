@@ -105,14 +105,10 @@ public class ItemEntity
 		float blah = 16.0f;
 		
 		glBegin(GL_QUADS);
-		glTexCoord2f(0,0);
-		glVertex3f(-half,0,-half);
-		glTexCoord2f(1f/blah,0);
-		glVertex3f(half,0,-half);
-		glTexCoord2f(1f/blah,1f/blah);
-		glVertex3f(half,0,half);
-		glTexCoord2f(0,1f/blah);
-		glVertex3f(-half,0,half);
+		glTexCoord2f(0,0);				glVertex3f(-half,0,-half);
+		glTexCoord2f(1f/blah,0);		glVertex3f(half,0,-half);
+		glTexCoord2f(1f/blah,1f/blah);	glVertex3f(half,0,half);
+		glTexCoord2f(0,1f/blah);		glVertex3f(-half,0,half);
 		glEnd();
 		
 		//Cylinder log = new Cylinder();
