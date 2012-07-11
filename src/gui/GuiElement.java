@@ -38,4 +38,8 @@ public class GuiElement
 	public void handleClick()
 	{
 	}
+
+	public void handleKeyboard()
+	{
+	}
 }

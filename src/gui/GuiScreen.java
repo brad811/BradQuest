@@ -31,12 +31,31 @@ public class GuiScreen
 		}
 	}
 	
-	public void handleKeyboard()
+	public void handleMouse(int id)
 	{
+		if(!Mouse.isButtonDown(0))
+			return;
 		
+		Iterator<GuiElement> it = elements.iterator();
+		while(it.hasNext())
+		{
+			if(it.next().id == id)
+				continue;
+			
+			it.next().handleClick();
+		}
 	}
 	
 	public void handleClick(int id)
 	{
+	}
+	
+	public void handleKeyboard()
+	{
+		Iterator<GuiElement> it = elements.iterator();
+		while(it.hasNext())
+		{
+			it.next().handleKeyboard();
+		}
 	}
 }

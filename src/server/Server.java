@@ -18,6 +18,7 @@ import main.Game;
 import main.GameApplet;
 import main.Player;
 import main.PlayerInventory;
+import main.ServerMode;
 
 public class Server
 {
@@ -66,10 +67,10 @@ public class Server
 	
 	public void say(String msg)
 	{
-		if(!game.console)
-			gameApplet.menu.serverPrint(msg);
-		else
-			System.out.println(msg);
+		//if(!game.console)
+		//	gameApplet.menu.serverPrint("Server: " + msg);
+		//else
+			ServerMode.say("Server: " + msg);
 	}
 	
 	public void addPlayer(String name)

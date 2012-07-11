@@ -3,8 +3,8 @@ package items;
 import static org.lwjgl.opengl.GL11.*;
 
 import main.Game;
-import main.GameApplet;
 import main.Map;
+import main.MultiplayerMode;
 
 // An ItemEntity is an instance of an item that is currently
 // not in an inventory, such as an item on the ground
@@ -100,7 +100,7 @@ public class ItemEntity
 		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBindTexture(GL_TEXTURE_2D, GameApplet.getItemsTexture().getTextureID());
+		glBindTexture(GL_TEXTURE_2D, MultiplayerMode.itemsTexture.getTextureID());
 		
 		float blah = 16.0f;
 		

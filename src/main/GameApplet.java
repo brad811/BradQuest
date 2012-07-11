@@ -14,7 +14,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.newdawn.slick.opengl.Texture;
 
 import render.Renderer;
 
@@ -27,20 +26,26 @@ public class GameApplet extends Applet
 {
 	private static final long serialVersionUID = 1L;
 	
-	public Menu menu;
-	
 	public static Dimension dim = new Dimension(854, 480);
 	
+	public static String username = "nobody";
+	
+	// Class variables
 	public Game game;
 	public Gui gui;
 	public MultiplayerMode multiplayerMode;
 	
+	// Frame rate variables
+	int framerate_count;
+	long framerate_timestamp;
+	Date d;
+	long this_framerate_timestamp;
 	long lastFrameTime; // used to calculate delta
-	public boolean closeRequested = false;
 	
 	Canvas display_parent;
 	Thread gameThread;
 	boolean running = false;
+	public boolean closeRequested = false;
 	
 	public void init()
 	{say("init");
@@ -51,8 +56,6 @@ public class GameApplet extends Applet
 		
 		MultiplayerMode.gameApplet = this;
 		ServerMode.gameApplet = this;
-		
-		gui.currentScreen = Gui.GUI_MAIN_MENU;
 	}
 	
 	public void start()
@@ -74,11 +77,9 @@ public class GameApplet extends Applet
 							super.addNotify();
 						}
 						public final void removeNotify() {
-							try
-							{
+							try {
 								finalize();
-							} catch (Throwable e)
-							{
+							} catch (Throwable e) {
 								e.printStackTrace();
 							}
 							super.removeNotify();
@@ -168,28 +169,36 @@ public class GameApplet extends Applet
 		/**/
 	}
 	
-	public void gameLoop()
-	{say("gameLoop");
-		int framerate_count = 0;
-		long framerate_timestamp = new Date().getTime();
+	private void prepFramerate()
+	{
+		framerate_count = 0;
+		framerate_timestamp = new Date().getTime();
+	}
+	
+	private void printFramerate()
+	{
+		framerate_count++;
+
+		d = new Date();
+		this_framerate_timestamp = d.getTime();
 		
-		Date d;
-		long this_framerate_timestamp;
+		if ((this_framerate_timestamp - framerate_timestamp) >= 1000)
+		{
+			//System.err.println("Frame Rate: " + framerate_count);
+			
+			framerate_count = 0;
+			framerate_timestamp = this_framerate_timestamp;
+		}
+	}
+	
+	private void gameLoop()
+	{say("gameLoop");
+		
+		prepFramerate();
 		
 		while(running)
 		{
-			framerate_count++;
-
-			d = new Date();
-			this_framerate_timestamp = d.getTime();
-			
-			if ((this_framerate_timestamp - framerate_timestamp) >= 1000)
-			{
-				System.err.println("Frame Rate: " + framerate_count);
-				
-				framerate_count = 0;
-				framerate_timestamp = this_framerate_timestamp;
-			}
+			printFramerate();
 			
 			gui.handleInput();
 			
@@ -199,7 +208,7 @@ public class GameApplet extends Applet
 		}
 		
 		Display.destroy();
-		System.out.println("GameApplet - gameLoop done");
+		say("gameLoop done");
 	}
 	
 	public void startMultiplayerMode()
@@ -209,7 +218,7 @@ public class GameApplet extends Applet
 		multiplayerMode.start();
 	}
 	
-	public void render()
+	private void render()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
 		
@@ -220,10 +229,11 @@ public class GameApplet extends Applet
 			multiplayerMode.render(dim.width, dim.height);
 		}
 		
+		glClear(GL_DEPTH_BUFFER_BIT);
 		gui.render();
 	}
 	
-	public void updateCamera()
+	private void updateCamera()
 	{
 		glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
 		glLoadIdentity(); // Reset The Projection Matrix
@@ -245,16 +255,6 @@ public class GameApplet extends Applet
 				
 				0.0f, 0.0f, 1.0f	// Up
 			);
-	}
-	
-	public static Texture getItemsTexture()
-	{
-		return MultiplayerMode.itemsTexture;
-	}
-	
-	public static Texture getTilesTexture()
-	{
-		return MultiplayerMode.tilesTexture;
 	}
 	
 	public void finalize()
@@ -279,8 +279,8 @@ public class GameApplet extends Applet
 		super.destroy();
 	}
 	
-	public void say(String msg)
+	private void say(String msg)
 	{
-		System.out.println(msg);
+		System.out.println("GameApplet: " + msg);
 	}
 }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 
-import main.GameApplet;
+import main.MultiplayerMode;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -15,7 +15,7 @@ public class Renderer
 {
 	public static Plane buildTile(int id, int tileX, int tileY)
 	{
-		glBindTexture(GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
+		glBindTexture(GL_TEXTURE_2D, MultiplayerMode.tilesTexture.getTextureID());
 		
 		Plane plane = new Plane();
 		plane.init(tileX, tileY);
@@ -26,7 +26,7 @@ public class Renderer
 	public static ArrayList<Shape> buildTree()
 	{
 		ArrayList<Shape> tree = new ArrayList<Shape>();
-		glBindTexture(GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
+		glBindTexture(GL_TEXTURE_2D, MultiplayerMode.tilesTexture.getTextureID());
 		
 		// Trunk
 		int tileX = 4, tileY = 0;
@@ -47,10 +47,13 @@ public class Renderer
 	public static ArrayList<Shape> buildPlayer()
 	{
 		ArrayList<Shape> player = new ArrayList<Shape>();
-		glBindTexture(GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
+		glBindTexture(GL_TEXTURE_2D, MultiplayerMode.tilesTexture.getTextureID());
+		
+		int tileX, tileY;
 		
 		// Head
-		int tileX = 3, tileY = 0;
+		tileX = 3;
+		tileY = 0;
 		Cube head = new Cube();
 		head.init(tileX, tileY);
 		player.add(head);

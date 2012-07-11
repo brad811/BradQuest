@@ -1,8 +1,10 @@
 package main;
 
+import java.util.Random;
+
 public class Game
 {
-	public static final int build = 9;
+	public static final int build = 10;
 	public static final int port = 2222;
 	
 	public static final int tileSize = 32;
@@ -25,16 +27,28 @@ public class Game
 	
 	public boolean loaded = false;
 	
-	public void startServerMode()
+	public static Random rand;
+	public static long seed = System.currentTimeMillis() * System.nanoTime();
+	
+	public Game()
 	{
-		serverMode = new ServerMode(this);
-		serverMode.start();
+		rand = new Random(seed);
 	}
 	
 	public void startConsoleMode()
 	{
 		console = true;
+		startServerMode();
+	}
+	
+	public void initServerMode()
+	{
 		serverMode = new ServerMode(this);
+		serverMode.init();
+	}
+	
+	public void startServerMode()
+	{
 		serverMode.start();
 	}
 	

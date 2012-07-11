@@ -1,5 +1,7 @@
 package main;
 
+import gui.GuiServer;
+
 import java.io.IOException;
 
 import server.Server;
@@ -31,15 +33,18 @@ public class ServerMode extends Mode implements Runnable
 		game.serverMap.serverTick();
 	}
 	
-	public void start()
+	public void init()
 	{
 		lastTime = System.currentTimeMillis();
 		curTime = System.currentTimeMillis();
 		
 		game.serverMap = new Map();
-		
-		if(!game.console)
-			gameApplet.menu.serverScreen();
+	}
+	
+	public void start()
+	{
+		//if(!game.console)
+		//	gameApplet.menu.serverScreen();
 		
 		new Thread(this).start();
 	}
@@ -110,12 +115,17 @@ public class ServerMode extends Mode implements Runnable
 			gameApplet.repaint();
 	}
 	
-	public void say(String msg)
+	public static void say(String msg)
 	{
-		if(!game.console)
-			gameApplet.menu.serverPrint(msg);
-		else
-			System.out.println(msg);
+		//if(!game.console)
+		//	gameApplet.menu.serverPrint("ServerMode: " + msg);
+		//else
+			System.out.println("ServerMode: " + msg);
+		
+		if(Game.mode == Game.SERVER_MODE)
+		{
+			GuiServer.appendText(msg);
+		}
 	}
 	
 	public void quit()

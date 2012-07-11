@@ -1,11 +1,7 @@
 package main;
 
-import java.util.Random;
-
 public class PerlinNoise
 {
-	public static long seed = 10;
-    Random random = new Random(seed);
     public static int pointsComplete = 0;
     public static int pointsTotal = 1;
     
@@ -17,7 +13,7 @@ public class PerlinNoise
         {
             for (int j = 0; j < height; j++)
             {
-                noise[i][j] = (float)random.nextDouble() % 1;
+                noise[i][j] = (float)Game.rand.nextDouble() % 1;
             }
             pointsComplete++;
         }

@@ -19,7 +19,6 @@ import client.Client;
 public class MultiplayerMode extends Mode implements Runnable
 {
 	Client client;
-	static String name = "nobody";
 	public static String server = "localhost";
 	public Player player;
 	Input input;
@@ -27,6 +26,8 @@ public class MultiplayerMode extends Mode implements Runnable
 	public static Texture itemsTexture;
 	
 	public Map clientMap;
+	
+	boolean runServer = false;
 	
 	boolean connected = false;
 	boolean failed = false;
@@ -37,41 +38,70 @@ public class MultiplayerMode extends Mode implements Runnable
 		gameApplet = g;
 		mode = Game.CLIENT_MODE;
 		Game.mode = mode;
-		System.out.println("multiplayerMode - created");
+		say("created");
 	}
 	
 	public void start()
 	{
-		// Move this to a new menu screen with text input for name, and server address input
-		gameApplet.gui.setScreen(Gui.GUI_SINGLE_PLAYER_MENU);
+		if(game.console)
+			gameApplet.gui.setScreen(Gui.GUI_SINGLE_PLAYER_MENU);
+		else
+			gameApplet.gui.setScreen(Gui.GUI_MULTIPLAYER_MENU);
 	}
 	
-	// This needs to change!!!! gameApplet.run() will break things
-	public void keepStarting()
+	public void startSinglePlayer()
+	{
+		gameApplet.game.initServerMode();
+		
+		Thread startServerThread = new Thread() {
+			public void run()
+			{
+				say("startSinglePlayer");
+				gameApplet.game.startServerMode();
+			}
+		};
+		
+		startServerThread.start();
+		
+		gameApplet.gui.setScreen(Gui.GUI_LOADING_MAP);
+		while ((gameApplet.game.serverMap.percentGenerated < 100.0) && !quit)
+		{
+			System.out.print(""); // for some reason putting this here makes the loading bar work...
+			gameApplet.gui.guiLoadingMap.setPercent((float)gameApplet.game.serverMap.percentLoaded);
+		}
+		say("done - startStinglePlayer");
+		keepStarting(true);
+	}
+	
+	public void keepStarting(boolean runServer)
 	{
 		clientMap = new Map();
 		
 		input = new Input();
 		
-		player = new Player(input, clientMap, name);
+		player = new Player(input, clientMap, GameApplet.username);
 		player.init();
 		
-		System.out.println("Trying to connect...");
+		gameApplet.gui.guiInGame.setName();
+		
+		say("Trying to connect to '"+server+"'...");
 		client = new Client(this);
 		
 		if (!client.connect())
 		{
 			failed = true;
-			System.out.println("Unable to connect!");
+			say("Unable to connect!");
 			return;
 		}
 		connected = true;
-		System.out.println("Connected.");
+		say("Connected.");
 		
-		System.out.println("Starting client...");
+		say("Starting client...");
 		client.start();
 		
-		System.out.println("Starting multiplayer mode...");
+		Game.mode = mode; // starting the server sets the game to server mode, so here I'm changing it back
+		
+		say("Starting multiplayer mode...");
 		new Thread(this).start();
 	}
 	
@@ -87,7 +117,7 @@ public class MultiplayerMode extends Mode implements Runnable
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		} catch (IOException e)
 		{
-			System.out.println("Unable to load tiles texture!");
+			say("Unable to load tiles texture!");
 		}
 		
 		try
@@ -100,7 +130,7 @@ public class MultiplayerMode extends Mode implements Runnable
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		} catch (IOException e)
 		{
-			System.out.println("Unable to load items texture!");
+			say("Unable to load items texture!");
 		}
 		
 		Tile.init();
@@ -119,37 +149,38 @@ public class MultiplayerMode extends Mode implements Runnable
 		
 		gameApplet.gui.setScreen(Gui.GUI_IN_GAME);
 		
-		System.out.println("Entering main game loop...");
+		Long startTime, stopTime;
+		long tickInterval = 1000/Game.TPS;
+		
+		say("Entering main game loop...");
 		while (!quit)
 		{
 			input.getKeys();
-			Long startTime = System.currentTimeMillis();
+			startTime = System.currentTimeMillis();
 			
-			if (startTime - lastTick >= 1000 / Game.TPS)
+			if (startTime - lastTick >= tickInterval)
 			{
 				tick();
 				lastTick = startTime;
 			} else
 			{
-				System.out.println(startTime + " - " + lastTick + " (" + (startTime - lastTick) + ") < " + 1000
-						/ Game.TPS);
+				say(startTime + " - " + lastTick + " (" + (startTime - lastTick) + ") < " + tickInterval);
 			}
 			
-			Long stopTime = System.currentTimeMillis();
+			stopTime = System.currentTimeMillis();
 			
-			if (stopTime - startTime < 1000 / Game.TPS)
+			if (stopTime - startTime < tickInterval)
 			{
 				try
 				{
-					// Thread.sleep(16,666666);
-					Thread.sleep(1000 / Game.TPS - (stopTime - startTime));
+					Thread.sleep(tickInterval - (stopTime - startTime));
 				} catch (InterruptedException e)
 				{
-					System.out.println("Thread sleep interrupted!");
+					say("Thread sleep interrupted!");
 				}
 			}
 		}
-		System.out.println("multiplayerMode - quit");
+		say("multiplayerMode - quit");
 	}
 	
 	public void tick()
@@ -164,16 +195,14 @@ public class MultiplayerMode extends Mode implements Runnable
 	
 	public void render(int width, int height)
 	{
-		clientMap.render(width, height, player.getX(), player.getY());
-		
 		try
 		{
 			Player p;
 			Iterator<Player> i = clientMap.players.iterator();
 			while (i.hasNext() && !quit)
 			{
-				p = (Player) i.next();
-				p.renderOther(player.getX(), player.getY());
+				p = i.next();
+				p.render();
 			}
 		} catch (ConcurrentModificationException e)
 		{
@@ -182,12 +211,17 @@ public class MultiplayerMode extends Mode implements Runnable
 		
 		player.render();
 		
-		// Move this to last when it's not immediate anymore
+		clientMap.render(width, height, player.getX(), player.getY());
+		
+		// Move this to last when it's not immediate anymore - ???
 		clientMap.renderItemEntities(player.getX(), player.getY());
 		
-		// bufferGraphics.drawString("Seed: " + map.seed, 10, 46);
-		
 		//getPlayer().playerInventory.render(width, height);
+	}
+	
+	private static void say(String msg)
+	{
+		System.out.println("MultiplayerMode: " + msg);
 	}
 	
 	public void quit()
@@ -198,7 +232,7 @@ public class MultiplayerMode extends Mode implements Runnable
 		if(client != null)
 		{
 			client.quit();
-			System.out.println("client - quit");
+			say("client - quit");
 		}
 	}
 }

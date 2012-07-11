@@ -25,8 +25,6 @@ public class GuiElementBox extends GuiElement
 		this.a = a;
 	}
 	
-	static float myZ = 105.0f;
-	
 	public void render()
 	{
 		glLoadIdentity();
@@ -36,10 +34,10 @@ public class GuiElementBox extends GuiElement
 		
 		glBegin(GL_QUADS);
 		
-		glTexCoord2f(7.0f/16.0f, 0.0f/16.0f);	glVertex3f(x + w,	y + h,	1.0f);
-		glTexCoord2f(6.0f/16.0f, 1.0f/16.0f);	glVertex3f(x + 0,	y + h,	1.0f);
-		glTexCoord2f(6.0f/16.0f, 1.0f/16.0f);	glVertex3f(x + 0,	y + 0,	1.0f);
-		glTexCoord2f(7.0f/16.0f, 0.0f/16.0f);	glVertex3f(x + w,	y + 0,	1.0f);
+		glTexCoord2f(7.0f/16.0f, 0.0f/16.0f);	glVertex3f(x + w,	y + h,	0.0f);
+		glTexCoord2f(6.0f/16.0f, 1.0f/16.0f);	glVertex3f(x + 0,	y + h,	0.0f);
+		glTexCoord2f(6.0f/16.0f, 1.0f/16.0f);	glVertex3f(x + 0,	y + 0,	0.0f);
+		glTexCoord2f(7.0f/16.0f, 0.0f/16.0f);	glVertex3f(x + w,	y + 0,	0.0f);
 	    
 		glEnd();
 	}

@@ -17,12 +17,38 @@ public class GuiMainMenu extends GuiScreen
 		this.gui = gui;
 		
 		// add elements
-		elements.add(new GuiElementButton(this, 0, -75, 30, 150, 20, "Single Player"));
-		elements.add(new GuiElementButton(this, 1, -75, -10, 150, 20, "Multiplayer"));
-		elements.add(new GuiElementButton(this, 2, -75, -60, 150, 20, "Server Mode"));
+		elements.add(
+				new GuiElementButton(
+						this, 0,
+						-75, 30,
+						150, 20,
+						"Single Player"
+					)
+			);
 		
-		elements.add(new GuiElementButton(this, 2, -150, -60, 50, 20, "one"));
-		elements.add(new GuiElementButton(this, 2, 125, -60, 50, 20, "one"));
+		elements.add(
+				new GuiElementButton(
+						this, 1,
+						-75, -10,
+						150, 20,
+						"Multiplayer"
+					)
+			);
+		
+		elements.add(
+				new GuiElementButton(
+						this, 2,
+						-75, -60,
+						150, 20,
+						"Server Mode"
+					)
+			);
+		
+		//elements.add(new GuiElementButton(this, 2, -150, -90, 50, 20, "iiiiiiiiiiiiiiiiiiiiiiii"));
+		//elements.add(new GuiElementButton(this, 2, -150, -120, 50, 20, "oooooooo"));
+		
+		//elements.add(new GuiElementButton(this, 2, -150, -60, 50, 20, "one"));
+		//elements.add(new GuiElementButton(this, 2, 125, -60, 50, 20, "one"));
 	}
 	
 	public static void init()
@@ -53,17 +79,21 @@ public class GuiMainMenu extends GuiScreen
 	public void singlePlayerModeClicked()
 	{
 		gui.gameApplet.game.console = true;
-		gui.gameApplet.game.startServerMode();
 		gui.gameApplet.startMultiplayerMode();
 	}
 	
 	public void multiplayerModeClicked()
 	{
-		System.out.println("Starting multiplayer!");
+		gui.gameApplet.startMultiplayerMode();
 	}
 	
 	public void serverModeClicked()
 	{
-		System.out.println("Starting server mode!");
+		gui.gameApplet.game.console = false;
+		
+		gui.setScreen(Gui.GUI_SERVER);
+		
+		gui.gameApplet.game.initServerMode();
+		gui.gameApplet.game.startServerMode();
 	}
 }

@@ -10,19 +10,24 @@ import main.GameApplet;
 
 public class Gui
 {
-	public static final int GUI_MAIN_MENU = 0;
-	public static final int GUI_SINGLE_PLAYER_MENU = 1;
-	public static final int GUI_MULTIPLAYER_MENU = 2;
-	public static final int GUI_LOADING_MAP = 3;
-	public static final int GUI_IN_GAME = 4;
+	public static final int GUI_LOGIN = 0;
+	public static final int GUI_MAIN_MENU = 1;
+	public static final int GUI_SINGLE_PLAYER_MENU = 2;
+	public static final int GUI_MULTIPLAYER_MENU = 3;
+	public static final int GUI_LOADING_MAP = 4;
+	public static final int GUI_IN_GAME = 5;
+	public static final int GUI_SERVER = 6;
 	
 	public int currentScreen = GUI_MAIN_MENU;
 	public GuiScreen currentScreenInstance;
 	
+	GuiLogin guiLogin;
 	GuiMainMenu guiMainMenu;
 	GuiSinglePlayerMenu guiSinglePlayerMenu;
+	GuiMultiplayerMenu guiMultiplayerMenu;
 	public GuiLoadingMap guiLoadingMap;
-	GuiInGame guiInGame;
+	public GuiInGame guiInGame;
+	public GuiServer guiServer;
 	
 	GameApplet gameApplet;
 	
@@ -30,12 +35,15 @@ public class Gui
 	{
 		gameApplet = applet;
 		
+		guiLogin = new GuiLogin(this);
 		guiMainMenu = new GuiMainMenu(this);
 		guiSinglePlayerMenu = new GuiSinglePlayerMenu(this);
+		guiMultiplayerMenu = new GuiMultiplayerMenu(this);
 		guiLoadingMap = new GuiLoadingMap(this);
 		guiInGame = new GuiInGame(this);
+		guiServer = new GuiServer(this);
 		
-		currentScreenInstance = guiMainMenu;
+		currentScreenInstance = guiLogin;
 	}
 	
 	public static void init()
@@ -46,11 +54,13 @@ public class Gui
 	public void setScreen(int screen)
 	{
 		switch(screen) {
+			case GUI_LOGIN: currentScreenInstance = guiLogin; break;
 			case GUI_MAIN_MENU: currentScreenInstance = guiMainMenu; break;
 			case GUI_SINGLE_PLAYER_MENU: currentScreenInstance = guiSinglePlayerMenu; break;
-			//case GUI_MULTIPLAYER_MENU: currentScreenInstance = guiMainMenu; break;
+			case GUI_MULTIPLAYER_MENU: currentScreenInstance = guiMultiplayerMenu; break;
 			case GUI_LOADING_MAP: currentScreenInstance = guiLoadingMap; break;
 			case GUI_IN_GAME: currentScreenInstance = guiInGame; break;
+			case GUI_SERVER: currentScreenInstance = guiServer; break;
 		}
 	}
 	
@@ -104,7 +114,5 @@ public class Gui
 		{
 			currentScreenInstance.handleKeyboard();
 		}
-		
-		
 	}
 }

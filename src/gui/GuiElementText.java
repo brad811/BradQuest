@@ -29,8 +29,6 @@ public class GuiElementText extends GuiElement
 		this.center = center;
 	}
 	
-	static float myZ = 105.0f;
-	
 	public void render()
 	{
 		glLoadIdentity();
@@ -38,11 +36,19 @@ public class GuiElementText extends GuiElement
 		glColor4f(r, g, b, a);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		
-		FontRenderer.render(
-				text,
-				x,
-				y,
-				myZ
-			);
+		if(center)
+			FontRenderer.renderCentered(
+					text,
+					x,
+					y,
+					0.0f
+				);
+		else
+			FontRenderer.render(
+					text,
+					x,
+					y,
+					0.0f
+				);
 	}
 }

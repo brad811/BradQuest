@@ -37,12 +37,20 @@ public class Map
 		int[][] values = p.GenerateGradientMap();
 		
 		int count = 0;
+		
 		for(int i=0; i<Game.mapSize; i++)
 		{
 			for(int j=0; j<Game.mapSize; j++)
 			{
 				int r = values[i][j];
-				if(r < 35) { tiles[i][j] = new Tree(this,i,j,new Grass(this,i,j)); }
+				if(r < 25) { tiles[i][j] = new Tree(this,i,j,new Grass(this,i,j)); }
+				if(r < 35) {
+					double treeChance = (34 - r) * Game.rand.nextDouble();
+					if(treeChance > 1)
+						tiles[i][j] = new Tree(this,i,j,new Grass(this,i,j));
+					else
+						tiles[i][j] = new Grass(this,i,j);
+				}
 				else if(r < 50) { tiles[i][j] = new Grass(this,i,j); }
 				else if(r < 51) { tiles[i][j] = new Dirt(this,i,j); }
 				else if(r < 75) { tiles[i][j] = new Water(this,i,j); }
@@ -165,7 +173,7 @@ public class Map
 	public void render(int screenX, int screenY, int playerX, int playerY)
 	{
 		glColor3f(1.0f, 1.0f, 1.0f);
-		glBindTexture(GL_TEXTURE_2D, GameApplet.getTilesTexture().getTextureID());
+		glBindTexture(GL_TEXTURE_2D, MultiplayerMode.tilesTexture.getTextureID());
 		
 		int width = 40, height = 28;
 		for (int i = (playerX / Game.tileSize) - width/2;

@@ -1,11 +1,10 @@
 package main;
 
+import gui.FontRenderer;
 import items.Item;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static org.lwjgl.opengl.GL11.*;
 
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
@@ -204,97 +203,40 @@ public class Player
 	int prevOffset = 0;
 	int strikeTimer = 0;
 	
-	public int getOffsetX()
-	{
-		int offsetX = 0;
-		if (counter % 30 == 0)
-		{
-			prevOffset = (prevOffset + 1) % 2;
-		}
-		if (direction == RIGHT)
-		{
-			offsetX = 0;
-		}
-		if (direction == LEFT)
-		{
-			offsetX = 3;
-		}
-		if (direction == UP)
-		{
-			offsetX = 6;
-		}
-		if (direction == DOWN)
-		{
-			offsetX = 9;
-		}
-		if (moving)
-			offsetX += prevOffset + 1;
-		
-		return offsetX;
-	}
-	
-	public int getOffsetY()
-	{
-		int offsetY = 0;
-		try
-		{
-			if (map.tiles[x / Game.tileSize][y / Game.tileSize].type == Tile.TYPE_LIQUID)
-				offsetY = 1;
-		} catch (NullPointerException e)
-		{
-			
-		}
-		
-		return offsetY;
-	}
-	
 	public void render()
 	{
-		//int offsetX = getOffsetX();
-		//int offsetY = getOffsetY();
-		
 		//Strike.render(playerTexture, screenX, screenY, direction);
 		
-		//glLoadIdentity(); // Reset The View
-		//glTranslatef(x/Game.tileSize - 0.5f, y/Game.tileSize - 0.5f, -size * 0.6f); // Move down into position
+		float fx = ((float)getX() / (float)Game.tileSize) - 0.5f;
+		float fy = ((float)getY() / (float)Game.tileSize) - 0.5f;
 		
-		// body
-		//glScalef(0.5f, 0.6f, 0.5f);
-		//glTranslatef(0.0f, 0.0f, 1.0f);
-		//model.get(1).render();
+		if(model == null)
+			init();
 		
-		// head
-		//glScalef(0.7f, 0.7f, 0.8f);
-		//glTranslatef(0.0f, 0.0f, 1.0f);
-		//model.get(0).render();
-	}
-	
-	public void renderOther(int playerX, int playerY)
-	{
+		Renderer.addTile(
+				model.get(0).vertex_data_array,
+				fx, fy, 0,
+				0.5f, 0.5f, 1.0f
+			);
+		
+		//FontRenderer.renderCentered(name+"3", getX(), getY(), 1.0f);
+		//FontRenderer.renderCentered(name+"4", 0, 0, 1.0f);
+		
 		/*
-		int offsetX = getOffsetX();
-		int offsetY = getOffsetY();
+		// Body
+		Renderer.addTile(
+				model.get(0).vertex_data_array,
+				fx, fy, 0,
+				0.5f, 0.3f, 1.0f
+			);
 		
-		int fontSize = 18;
-		int fontWidth = 11;
-		
-		g.setColor(new Color(0f,0f,0f,0.5f));
-		g.fillRect(x - name.length()*fontWidth/2 + fontWidth, y - 40, name.length()*fontWidth + fontWidth - 2, 20);
-		
-		g.setColor(Color.WHITE);
-		g.setFont(new Font("Courier", Font.BOLD,  fontSize));
-		g.drawString(name, x - name.length()*fontWidth/2 + fontWidth/2 + fontWidth, y - 25);
+		// Head
+		Renderer.addTile(
+				model.get(1).vertex_data_array,
+				fx, fy, 0.6f,
+				0.3f, 0.3f, 0.4f
+			);
 		*/
-		
-		System.out.println("Other: ("+playerX+","+playerY+")");
-		
-		glLoadIdentity(); // Reset The View
-		glTranslatef(playerX/Game.tileSize - 0.5f, playerY/Game.tileSize - 0.5f, -size * 0.6f); // Move down into position
-		
-		//model.get(0).render();
-		
-		glTranslatef(0.0f, 0.0f, 1.0f);
-		//model.get(1).render();
 	}
 	
 	public int getX()

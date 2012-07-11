@@ -7,8 +7,33 @@ public class GuiSinglePlayerMenu extends GuiScreen
 		this.gui = gui;
 		
 		// add elements
-		elements.add(new GuiElementButton(this, 0, -75, -60, 150, 20, "Start Game"));
-		elements.add(new GuiElementTextInput(this, 1, -75, -20, 150, 20, "testing"));
+		elements.add(
+				new GuiElementButton(
+						this, 0,
+						-75, -60,
+						150, 20,
+						"Start Game"
+					)
+			);
+		
+		elements.add(
+				new GuiElementText(
+						this, 1,
+						-75, 5,
+						1, 1, 1, 1,
+						"Name",
+						false
+					)
+			);
+		
+		elements.add(
+				new GuiElementTextInput(
+						this, 1,
+						-75, -20,
+						150, 20,
+						"Steve", false, true
+					)
+			);
 	}
 	
 	public void handleClick(int id)
@@ -20,6 +45,7 @@ public class GuiSinglePlayerMenu extends GuiScreen
 	
 	public void startGameClicked()
 	{
-		gui.gameApplet.multiplayerMode.keepStarting();
+		// start the server first!
+		gui.gameApplet.multiplayerMode.startSinglePlayer();
 	}
 }
