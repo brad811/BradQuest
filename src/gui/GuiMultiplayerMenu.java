@@ -5,6 +5,7 @@ import main.MultiplayerMode;
 public class GuiMultiplayerMenu extends GuiScreen
 {
 	GuiElementTextInput serverText;
+	String serverTextDefault = "bradsproject.com";
 	
 	public GuiMultiplayerMenu(Gui gui)
 	{
@@ -14,7 +15,7 @@ public class GuiMultiplayerMenu extends GuiScreen
 		elements.add(
 				new GuiElementButton(
 						this, 0,
-						-75, -60,
+						-75, -40,
 						150, 20,
 						"Join Server"
 					)
@@ -23,7 +24,7 @@ public class GuiMultiplayerMenu extends GuiScreen
 		elements.add(
 				new GuiElementText(
 						this, 1,
-						-75, 5,
+						-75, 25,
 						1, 1, 1, 1,
 						"Server",
 						false
@@ -31,14 +32,23 @@ public class GuiMultiplayerMenu extends GuiScreen
 			);
 		
 		serverText = new GuiElementTextInput(
-				this, 1,
-				-75, -20,
+				this, 2,
+				-75, 10,
 				150, 20,
-				"bradsproject.com", false, true
+				serverTextDefault, false, true
 			);
 		
 		elements.add(
 				serverText
+			);
+		
+		elements.add(
+				new GuiElementButton(
+						this, 3,
+						-75, -70,
+						150, 20,
+						"Back"
+					)
 			);
 	}
 	
@@ -46,12 +56,24 @@ public class GuiMultiplayerMenu extends GuiScreen
 	{
 		switch(id) {
 			case 0: joinServerClicked(); break;
+			case 3: backClicked(); break;
 		}
 	}
 	
-	public void joinServerClicked()
+	private void joinServerClicked()
 	{
 		MultiplayerMode.server = serverText.value;
 		gui.gameApplet.multiplayerMode.keepStarting(false);
+	}
+	
+	private void backClicked()
+	{
+		reset();
+		gui.setScreen(Gui.GUI_MAIN_MENU);
+	}
+	
+	private void reset()
+	{
+		serverText.value = serverTextDefault;
 	}
 }

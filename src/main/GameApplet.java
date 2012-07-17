@@ -42,7 +42,7 @@ public class GameApplet extends Applet
 	long this_framerate_timestamp;
 	long lastFrameTime; // used to calculate delta
 	
-	Canvas display_parent;
+	Canvas canvas;
 	Thread gameThread;
 	boolean running = false;
 	public boolean closeRequested = false;
@@ -70,7 +70,7 @@ public class GameApplet extends Applet
 			{
 				setLayout(new BorderLayout());
 				try {
-					display_parent = new Canvas() {
+					canvas = new Canvas() {
 						private static final long serialVersionUID = 1L;
 						
 						public final void addNotify() {
@@ -85,11 +85,12 @@ public class GameApplet extends Applet
 							super.removeNotify();
 						}
 					};
-					display_parent.setSize(dim.width,dim.height);
-					add(display_parent);
-					display_parent.setFocusable(true);
-					display_parent.requestFocus();
-					display_parent.setIgnoreRepaint(true);
+					canvas.setSize(dim.width,dim.height);
+					add(canvas);
+					setFocusable(true);
+					canvas.setFocusable(true);
+					canvas.requestFocus();
+					canvas.setIgnoreRepaint(true);
 					setVisible(true);
 				} catch (Exception e) {
 					System.err.println(e);
@@ -98,8 +99,9 @@ public class GameApplet extends Applet
 				
 				running = true;
 				try {
-					Display.setParent(display_parent);
+					Display.setParent(canvas);
 					Display.create();
+					requestFocus();
 					initGL();
 				} catch (LWJGLException e) {
 					e.printStackTrace();
@@ -155,7 +157,7 @@ public class GameApplet extends Applet
 		float lightLevel = 2.0f;
 		FloatBuffer lightAmbient = BufferUtils.createFloatBuffer(4).put(new float[] { lightLevel, lightLevel, lightLevel, 1.0f });
 		FloatBuffer lightDiffuse = BufferUtils.createFloatBuffer(4).put(new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
-		FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4).put(new float[] { -3.0f, -3.0f, 5.0f, 0.0f });
+		FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4).put(new float[] { -2.0f, -3.0f, 5.0f, 0.0f });
 		
 		lightAmbient.flip();
 		lightDiffuse.flip();
@@ -185,6 +187,7 @@ public class GameApplet extends Applet
 		if ((this_framerate_timestamp - framerate_timestamp) >= 1000)
 		{
 			//System.err.println("Frame Rate: " + framerate_count);
+			gui.guiInGame.setFps(framerate_count);
 			
 			framerate_count = 0;
 			framerate_timestamp = this_framerate_timestamp;
@@ -244,13 +247,13 @@ public class GameApplet extends Applet
 		
 		gluLookAt(
 				// Be over the player
-				((float)multiplayerMode.player.getX() / (float)Game.tileSize) - 0.5f, 
-				((float)multiplayerMode.player.getY() / (float)Game.tileSize) + cameraTilt,
+				multiplayerMode.player.getX() - 0.5f, 
+				multiplayerMode.player.getY() + cameraTilt,
 				cameraHeight,	// Eyes
 				
 				// Look at the player
-				((float)multiplayerMode.player.getX() / (float)Game.tileSize) - 0.5f, 
-				((float)multiplayerMode.player.getY() / (float)Game.tileSize) + 0.0f, 
+				multiplayerMode.player.getX() - 0.5f, 
+				multiplayerMode.player.getY() + 0.0f, 
 				0.0f,	// Center
 				
 				0.0f, 0.0f, 1.0f	// Up

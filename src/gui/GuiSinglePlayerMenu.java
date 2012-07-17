@@ -10,7 +10,7 @@ public class GuiSinglePlayerMenu extends GuiScreen
 		elements.add(
 				new GuiElementButton(
 						this, 0,
-						-75, -60,
+						-75, -40,
 						150, 20,
 						"Start Game"
 					)
@@ -19,19 +19,28 @@ public class GuiSinglePlayerMenu extends GuiScreen
 		elements.add(
 				new GuiElementText(
 						this, 1,
-						-75, 5,
+						-75, 25,
 						1, 1, 1, 1,
-						"Name",
+						"World name",
 						false
 					)
 			);
 		
 		elements.add(
 				new GuiElementTextInput(
-						this, 1,
-						-75, -20,
+						this, 2,
+						-75, 10,
 						150, 20,
-						"Steve", false, true
+						"Not added yet!", false, true
+					)
+			);
+		
+		elements.add(
+				new GuiElementButton(
+						this, 3,
+						-75, -70,
+						150, 20,
+						"Back"
 					)
 			);
 	}
@@ -40,12 +49,24 @@ public class GuiSinglePlayerMenu extends GuiScreen
 	{
 		switch(id) {
 			case 0: startGameClicked(); break;
+			case 3: backClicked(); break;
 		}
 	}
 	
-	public void startGameClicked()
+	private void startGameClicked()
 	{
 		// start the server first!
 		gui.gameApplet.multiplayerMode.startSinglePlayer();
+	}
+	
+	private void backClicked()
+	{
+		reset();
+		gui.setScreen(Gui.GUI_MAIN_MENU);
+	}
+	
+	private void reset()
+	{
+		//serverText.value = serverTextDefault;
 	}
 }

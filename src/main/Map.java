@@ -65,13 +65,13 @@ public class Map
 		percentGenerated = 100.0;
 	}
 	
-	public boolean isOnMap(int x, int y)
+	public boolean isOnMap(float x, float y)
 	{
 		// Can't I just check by multiplying by tile size?
 		try
 		{
 			@SuppressWarnings("unused")
-			Tile tile = tiles[x / Game.tileSize][y / Game.tileSize];
+			Tile tile = tiles[(int)x][(int)y];
 		} catch (ArrayIndexOutOfBoundsException e)
 		{
 			return false;
@@ -135,7 +135,7 @@ public class Map
 		return false;
 	}
 	
-	public void renderItemEntities(int playerX, int playerY)
+	public void renderItemEntities(float playerX, float playerY)
 	{
 		Iterator<Entry<Integer, ItemEntity>> it = itemEntities.entrySet().iterator();
 		
@@ -170,19 +170,19 @@ public class Map
 		return null;
 	}
 	
-	public void render(int screenX, int screenY, int playerX, int playerY)
+	public void render(int screenX, int screenY, float playerX, float playerY)
 	{
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glBindTexture(GL_TEXTURE_2D, MultiplayerMode.tilesTexture.getTextureID());
 		
 		int width = 40, height = 28;
-		for (int i = (playerX / Game.tileSize) - width/2;
-				i <= (playerX / Game.tileSize) + width/2;
+		for (int i = (int)(playerX - width/2);
+				i <= playerX + width/2;
 				i++
 			)
 		{
-			for (int j = (playerY / Game.tileSize) - height/2;
-					j <= (playerY / Game.tileSize) + height/2;
+			for (int j = (int)(playerY - height/2);
+					j <= playerY + height/2;
 					j++
 				)
 			{

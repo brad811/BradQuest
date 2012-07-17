@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
@@ -36,7 +37,7 @@ public class MultiplayerMode extends Mode implements Runnable
 	{
 		super(g.game);
 		gameApplet = g;
-		mode = Game.CLIENT_MODE;
+		mode = Game.MULTIPLAYER_MODE;
 		Game.mode = mode;
 		say("created");
 	}
@@ -51,6 +52,7 @@ public class MultiplayerMode extends Mode implements Runnable
 	
 	public void startSinglePlayer()
 	{
+		server = "localhost";
 		gameApplet.game.initServerMode();
 		
 		Thread startServerThread = new Thread() {
@@ -82,7 +84,7 @@ public class MultiplayerMode extends Mode implements Runnable
 		player = new Player(input, clientMap, GameApplet.username);
 		player.init();
 		
-		gameApplet.gui.guiInGame.setName();
+		//gameApplet.gui.guiInGame.setName();
 		
 		say("Trying to connect to '"+server+"'...");
 		client = new Client(this);
@@ -110,7 +112,7 @@ public class MultiplayerMode extends Mode implements Runnable
 		try
 		{
 			if(tilesTexture == null)
-				tilesTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("/tiles.png"));
+				tilesTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("tiles.png"));
 			
 			glBindTexture(GL_TEXTURE_2D, tilesTexture.getTextureID());
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -123,7 +125,7 @@ public class MultiplayerMode extends Mode implements Runnable
 		try
 		{
 			if(itemsTexture == null)
-				itemsTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("/items.png"));
+				itemsTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("items.png"));
 			
 			glBindTexture(GL_TEXTURE_2D, itemsTexture.getTextureID());
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -191,6 +193,13 @@ public class MultiplayerMode extends Mode implements Runnable
 		
 		player.tick();
 		client.tick();
+		
+		gameApplet.gui.guiInGame.setPosition(player.name, player.getX(), player.getY());
+		
+		if(!Display.isActive())
+			input.loseFocus();
+		else
+			input.gainFocus();
 	}
 	
 	public void render(int width, int height)

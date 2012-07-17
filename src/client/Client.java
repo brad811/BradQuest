@@ -68,8 +68,8 @@ public class Client implements Runnable
 			String[] position = in.readLine().split("\\|");
 			if(position[1].equals(player.name))
 			{
-				player.setX( Integer.parseInt(position[2]) );
-				player.setY( Integer.parseInt(position[3]) );
+				player.setX( Float.parseFloat(position[2]) );
+				player.setY( Float.parseFloat(position[3]) );
 				player.direction = Integer.parseInt(position[4]);
 			}
 			else
@@ -170,8 +170,8 @@ public class Client implements Runnable
 		{
 			if(p.name.equals(playerData[1]))
 			{
-				p.setX( Integer.parseInt(playerData[2]) );
-				p.setY( Integer.parseInt(playerData[3]) );
+				p.setX( Float.parseFloat(playerData[2]) );
+				p.setY( Float.parseFloat(playerData[3]) );
 				p.direction = Integer.parseInt(playerData[4]);
 				found = true;
 				break;

@@ -56,7 +56,7 @@ public class GuiMainMenu extends GuiScreen
 		try
 		{
 			if(mainMenuTexture == null)
-				mainMenuTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("/main_menu.png"));
+				mainMenuTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("main_menu.png"));
 			
 			glBindTexture(GL_TEXTURE_2D, mainMenuTexture.getTextureID());
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

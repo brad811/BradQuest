@@ -22,7 +22,7 @@ public class FontRenderer
 		try
 		{
 			if(fontTexture == null)
-				fontTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("/font2.png"));
+				fontTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("font2.png"));
 			
 			glBindTexture(GL_TEXTURE_2D, fontTexture.getTextureID());
 			

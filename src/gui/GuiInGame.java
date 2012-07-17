@@ -4,36 +4,47 @@ import main.Game;
 
 public class GuiInGame extends GuiScreen
 {
-	GuiElementText nameText;
+	GuiElementText fps, position;
 	
 	public GuiInGame(Gui gui)
 	{
 		this.gui = gui;
-		
-		nameText = new GuiElementText(
-				this, 0, 
-				0, 10,
-				1, 1, 1, 0.5f,
-				"Nobody", true
-			);
-		
-		// add elements
-		elements.add(
-				nameText
-			);
 		
 		elements.add(
 				new GuiElementText(
 						this, 1, 
 						-210, 110,
 						1, 1, 1, 1,
-						"Seed " + Game.seed, false
+						"Seed: " + Game.seed, false
 					)
-			); 
+			);
+		
+		fps = new GuiElementText(
+					this, 2,
+					-210, 100,
+					1, 1, 1, 1,
+					"FPS: ?", false
+				);
+		
+		elements.add(fps);
+		
+		position = new GuiElementText(
+				this, 3,
+				-210, 90,
+				1, 1, 1, 1,
+				"", false
+			);
+		
+		elements.add(position);
 	}
 	
-	public void setName()
+	public void setFps(int f)
 	{
-		nameText.text = gui.gameApplet.multiplayerMode.player.name;
+		fps.text = "FPS: " + f;
+	}
+	
+	public void setPosition(String name, float x, float y)
+	{
+		position.text = name + ": (" + x + "," + y + ")";
 	}
 }

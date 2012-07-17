@@ -90,9 +90,9 @@ public class SolidTile extends Tile
 	
 	public void destroy()
 	{
-		if(Game.mode == Game.CLIENT_MODE)
+		if(Game.mode == Game.MULTIPLAYER_MODE || Game.mode == Game.SINGLE_PLAYER_MODE)
 			clientDestroy();
-		else if(Game.mode == Game.SERVER_MODE)
+		if(Game.mode == Game.SERVER_MODE || Game.mode == Game.SINGLE_PLAYER_MODE || Game.mode == Game.CONSOLE_MODE)
 			serverDestroy();
 	}
 }

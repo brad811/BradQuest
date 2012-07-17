@@ -1,11 +1,15 @@
 package main;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.lwjgl.input.Keyboard;
 
 public class Input
 {
+	boolean hasFocus = true;
+	
 	public Input()
 	{
 		keys.put("up",false);
@@ -28,6 +32,9 @@ public class Input
 	
 	public void getKeys()
 	{
+		if(!hasFocus)
+			return;
+		
 		try {
 			if(Keyboard.isKeyDown(Keyboard.KEY_UP)) { toggle("up",true); }
 			else { toggle("up",false); }
@@ -53,5 +60,26 @@ public class Input
 		{
 			// Keyboard not ready yet
 		}
+	}
+	
+	public void loseFocus()
+	{
+		if(!hasFocus)
+			return;
+		
+		System.out.println("Lost focus!");
+		
+		hasFocus = false;
+		
+		Iterator<Entry<String, Boolean>> it = keys.entrySet().iterator();
+		while(it.hasNext())
+		{
+			toggle(it.next().getKey(),false);
+		}
+	}
+	
+	public void gainFocus()
+	{
+		hasFocus = true;
 	}
 }

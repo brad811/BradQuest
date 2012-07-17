@@ -52,7 +52,7 @@ public class Renderer
 		int tileX, tileY;
 		
 		// Head
-		tileX = 3;
+		tileX = 7;
 		tileY = 0;
 		Cube head = new Cube();
 		head.init(tileX, tileY);

@@ -27,7 +27,7 @@ public class PlayerInventory extends Inventory
 	{
 		try
 		{
-			img = ImageIO.read(Game.class.getResourceAsStream("/inventory.png"));
+			img = ImageIO.read(Game.class.getResourceAsStream("inventory.png"));
 		} catch (IOException e)
 		{
 			System.out.println("Inventory image not found! (1)");
@@ -47,7 +47,7 @@ public class PlayerInventory extends Inventory
 		for(int i=0; i<items.size(); i++)
 		{
 			item = items.get(i);
-			item.item.render(g, screenX/2 - imgWidth/2 + i*Game.tileSize*2, screenY - imgHeight/2 - Game.tileSize);
+			//item.item.render(g, screenX/2 - imgWidth/2 + i*2, screenY - imgHeight/2 - 1.0f);
 			g.setColor(Color.WHITE);
 			g.drawString("" + item.quantity, screenX/2 - imgWidth/2 + 8, screenY - imgHeight + 18);
 		}

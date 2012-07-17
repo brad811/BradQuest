@@ -23,7 +23,7 @@ public class ServerMode extends Mode implements Runnable
 	{
 		super(g);
 		game = g;
-		mode = Game.SERVER_MODE;
+		mode = Game.CONSOLE_MODE;
 		Game.mode = mode;
 	}
 	

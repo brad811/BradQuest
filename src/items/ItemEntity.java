@@ -16,10 +16,8 @@ public class ItemEntity
 	public int type;
 	
 	public Map map;
-	public int mapX;
-	public int mapY;
-	public int x;
-	public int y;
+	public float x;
+	public float y;
 	
 	public int entityId = 1;
 	
@@ -30,30 +28,25 @@ public class ItemEntity
 	
 	int pickupDelay = Game.TPS*2; // half a second worth of ticks
 	
-	public ItemEntity(Map map, int mapX, int mapY, Item item, int entityId)
+	public ItemEntity(Map map, float x, float y, Item item, int entityId)
 	{
 		this.map = map;
-		this.mapX = mapX;
-		this.mapY = mapY;
 		
 		this.item = item;
 		
-		x = mapX;// * Game.tileSize + Game.tileSize/2;
-		y = mapY;// * Game.tileSize + Game.tileSize/2;
+		this.x = x;
+		this.y = y;
 		
 		this.entityId = entityId;
 	}
 	
-	public ItemEntity(Map map, int mapX, int mapY, Item item)
+	public ItemEntity(Map map, float x, float y, Item item)
 	{
 		this.map = map;
-		this.mapX = mapX;
-		this.mapY = mapY;
+		this.x = x;
+		this.y = y;
 		
 		this.item = item;
-		
-		x = mapX * Game.tileSize + Game.tileSize/2;
-		y = mapY * Game.tileSize + Game.tileSize/2;
 		
 		entityId = Game.entityId++;
 	}
@@ -86,13 +79,13 @@ public class ItemEntity
 		return item;
 	}
 	
-	public void render(int playerX, int playerY)
+	public void render(float playerX, float playerY)
 	{
 		glLoadIdentity(); // Reset The View
 		
 		glTranslatef(
-				(float)(x / Game.tileSize) - ((float)(playerX % Game.tileSize) / (float)Game.tileSize),
-				(float)(y / Game.tileSize) - ((float)(playerY % Game.tileSize) / (float)Game.tileSize),
+				x - playerX,
+				y - playerY,
 				0.0f
 			); // Move down into position
 		

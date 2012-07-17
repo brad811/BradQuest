@@ -81,8 +81,8 @@ public class Server
 			{
 				players.put(name, new Player(game.serverMap, Game.mapSize/2, Game.mapSize/2));
 				players.get(name).name = name;
-				players.get(name).setX( (Game.mapSize*Game.tileSize)/2 );
-				players.get(name).setY( (Game.mapSize*Game.tileSize)/2 );
+				players.get(name).setX(Game.mapSize / 2);
+				players.get(name).setY(Game.mapSize / 2);
 				players.get(name).direction = Player.DOWN;
 			}
 			onlinePlayers.add(name);
@@ -96,8 +96,8 @@ public class Server
 		if(message[0].equals("player"))
 		{
 			String name = message[1];
-			int x = Integer.parseInt(message[2]);
-			int y = Integer.parseInt(message[3]);
+			float x = Float.parseFloat(message[2]);
+			float y = Float.parseFloat(message[3]);
 			int direction = Integer.parseInt(message[4]);
 			
 			addPlayer(name);
