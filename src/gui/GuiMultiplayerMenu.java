@@ -5,7 +5,7 @@ import main.MultiplayerMode;
 public class GuiMultiplayerMenu extends GuiScreen
 {
 	GuiElementTextInput serverText;
-	String serverTextDefault = "bradsproject.com";
+	String serverTextDefault = "localhost";
 	
 	public GuiMultiplayerMenu(Gui gui)
 	{
