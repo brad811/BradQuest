@@ -48,7 +48,7 @@ public class ItemEntity
 		
 		this.item = item;
 		
-		entityId = Game.entityId++;
+		entityId = Game.entityIdCounter++;
 	}
 	
 	public void tick()

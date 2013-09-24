@@ -19,8 +19,9 @@ public class Player
 {
 	public String name = "nobody";
 	
-	private float x, y, speed = 0.0625f;
-	//private int x, y, speed = 2;
+	private float
+		x, y, z,
+		speed = 0.0625f;
 	Texture playerTexture;
 	Input input;
 	Map map;
@@ -82,6 +83,11 @@ public class Player
 		
 		if (input.keys.get("shift") || map.tiles[(int)x][(int)y].type == Tile.TYPE_LIQUID)
 			mySpeed /= 2;
+		
+		if (map.tiles[(int)x][(int)y].type == Tile.TYPE_LIQUID)
+			z = -0.5f;
+		else
+			z = 0.0f;
 		
 		float oldX = x, oldY = y;
 		
@@ -205,15 +211,16 @@ public class Player
 	{
 		//Strike.render(playerTexture, screenX, screenY, direction);
 		
-		float fx = getX() - 0.5f;
-		float fy = getY() - 0.5f;
+		float fx = x - 0.5f;
+		float fy = y - 0.5f;
+		float fz = z;
 		
 		if(model == null)
 			init();
 		
 		Renderer.addTile(
 				model.get(0).vertex_data_array,
-				fx, fy, 0,
+				fx, fy, fz,
 				0.5f, 0.5f, 1.0f
 			);
 		
@@ -255,6 +262,16 @@ public class Player
 	}
 	
 	public void setY(float y)
+	{
+		this.y = y;
+	}
+	
+	public float getZ()
+	{
+		return z;
+	}
+	
+	public void setZ(float y)
 	{
 		this.y = y;
 	}

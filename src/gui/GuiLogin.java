@@ -72,6 +72,9 @@ public class GuiLogin extends GuiScreen
 	{
 		// check that login credentials are legit
 		// save the user somewhere? should it be its own class?
+		if(username.value.length() == 0)
+			username.value = "Player";
+		
 		GameApplet.username = username.value;
 		
 		gui.setScreen(Gui.GUI_MAIN_MENU);

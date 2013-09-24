@@ -72,7 +72,7 @@ public class SolidTile extends Tile
 					ItemEntity[] items = cur.getValue();
 					for(int i=0; i<items.length; i++)
 					{
-						items[i].entityId = Game.entityId++;
+						items[i].entityId = Game.entityIdCounter++;
 						map.addItemEntity(items[i]);
 					}
 					

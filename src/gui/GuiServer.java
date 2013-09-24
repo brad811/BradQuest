@@ -26,7 +26,7 @@ public class GuiServer extends GuiScreen
 					this, i, 
 					-205, 105 - i*10,
 					1, 1, 1, 1,
-					"Server line " + i, false
+					" ", false
 				);
 			
 			elements.add(

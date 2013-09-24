@@ -10,15 +10,6 @@ public class ServerMode extends Mode implements Runnable
 {
 	Server server;
 	
-	public ServerMode(GameApplet g)
-	{
-		super(g.game);
-		gameApplet = g;
-		game = g.game;
-		mode = Game.SERVER_MODE;
-		Game.mode = mode;
-	}
-	
 	public ServerMode(Game g)
 	{
 		super(g);
@@ -122,15 +113,14 @@ public class ServerMode extends Mode implements Runnable
 		//else
 			System.out.println("ServerMode: " + msg);
 		
-		if(Game.mode == Game.SERVER_MODE)
+		if(Game.mode == Game.SERVER_MODE || gameApplet != null)
 		{
 			GuiServer.appendText(msg);
 		}
 	}
 	
 	public void quit()
-	{
-		say("Quitting...");
+	{say("Quitting...");
 		quit = true;
 		server.quit();
 	}
